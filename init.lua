@@ -17,6 +17,8 @@ function Library:Window(name)
     local UICorner_3 = Instance.new("UICorner")
     local UIListLayout_2 = Instance.new("UIListLayout")
     local UIPadding = Instance.new("UIPadding")
+    local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
+    UIAspectRatioConstraint.AspectRatio = 1.487
 
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
