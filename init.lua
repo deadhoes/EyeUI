@@ -17,12 +17,22 @@ function Library:Window(name)
     local UICorner_3 = Instance.new("UICorner")
     local UIListLayout_2 = Instance.new("UIListLayout")
     local UIPadding = Instance.new("UIPadding")
+    local Drag = Instance.new("Frame")
     local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
     UIAspectRatioConstraint.AspectRatio = 1.487
 
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
+    
+    Drag.Name = "Drag"
+    Drag.Parent = Menu
+    Drag.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    Drag.BackgroundTransparency = 0.750
+    Drag.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    Drag.BorderSizePixel = 0
+    Drag.Position = UDim2.new(0.377262533, 0, 1.02564108, 0)
+    Drag.Size = UDim2.new(0, 192, 0, 5)
+    
     Menu.Name = "Menu"
     Menu.Parent = ScreenGui
     Menu.AnchorPoint = Vector2.new(0.5, 0.5)
@@ -139,42 +149,46 @@ function Library:Window(name)
     end)
 
     local UIS = game:GetService("UserInputService")
-    local dragToggle = nil
-    local dragSpeed = 0.25
-    local dragInput = nil
-    local dragStart = nil
-    local dragPos = nil
-    
-    local function updateInput(input)
-        local Delta = input.Position - dragStart
-        local Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + Delta.X, startPos.Y.Scale, startPos.Y.Offset + Delta.Y)
-        game:GetService("TweenService"):Create(Menu, TweenInfo.new(0.20, Enum.EasingStyle.Back), {Position = Position}):Play()
-    end
-    
-    Menu.InputBegan:Connect(function(input)
-        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) and UIS:GetFocusedTextBox() == nil then
-            dragToggle = true
-            dragStart = input.Position
-            startPos = Menu.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragToggle = false
-                end
-            end)
-        end
-    end)
-    
-    Menu.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
-            dragInput = input
-        end
-    end)
-    
-    UIS.InputChanged:Connect(function(input)
-        if input == dragInput and dragToggle then
-            updateInput(input)
-        end
-    end)
+	
+	local DragBar = script.Parent
+	local MainFrame = DragBar.Parent
+	
+	local dragging = false
+	local dragInput, dragStart, startPos
+	
+	local function update(input)
+		local delta = input.Position - dragStart
+		MainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
+			startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+	end
+	
+	DragBar.InputBegan:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseButton1 then
+			dragging = true
+			dragStart = input.Position
+			startPos = MainFrame.Position
+	
+			input.Changed:Connect(function()
+				if input.UserInputState == Enum.UserInputState.End then
+					dragging = false
+				end
+			end)
+		end
+	end)
+	
+	DragBar.InputChanged:Connect(function(input)
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			dragInput = input
+		end
+	end)
+	
+	UIS.InputChanged:Connect(function(input)
+		if input == dragInput and dragging then
+			update(input)
+		end
+	end)
+	
+end
 
     local WindowFunctions = {}
     WindowFunctions.tabs = {}
