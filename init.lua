@@ -410,7 +410,7 @@ function Library:Window(name)
                 ToggleSwitch.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 ToggleSwitch.BorderSizePixel = 0
                 ToggleSwitch.Position = UDim2.new(0.842343211, 0, 0.318181813, 0)
-                ToggleSwitch.Size = UDim2.new(0, 42, 0, 15)
+                ToggleSwitch.Size = UDim2.new(0, 35, 0, 15)
 
                 UICorner_2.CornerRadius = UDim.new(0.400000006, 0)
                 UICorner_2.Parent = ToggleSwitch
