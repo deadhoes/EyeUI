@@ -189,80 +189,76 @@ function Library:Window(name)
     WindowFunctions.tabs = {}
     WindowFunctions.selectedTab = nil
 
-    function WindowFunctions:Tab(name)
-        local Tab = Instance.new("Frame")
-        local ImageLabel = Instance.new("ImageLabel")
-        local TextLabel = Instance.new("TextLabel")
-        local TabButton = Instance.new("TextButton")
+    function WindowFunctions:Tab(name, iconAssetId)
+	local Tab = Instance.new("Frame")
+	local ImageLabel = Instance.new("ImageLabel")
+	local TextLabel = Instance.new("TextLabel")
+	local TabButton = Instance.new("TextButton")
 
-        Tab.Name = name
-        Tab.Parent = Tabs
-        Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        Tab.BackgroundTransparency = 1.000
-        Tab.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        Tab.BorderSizePixel = 0
-        Tab.Size = UDim2.new(0, 127, 0, 48)
+	Tab.Name = name
+	Tab.Parent = Tabs
+	Tab.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+	Tab.BackgroundTransparency = 1.000
+	Tab.BorderSizePixel = 0
+	Tab.Size = UDim2.new(0, 127, 0, 48)
 
-        ImageLabel.Parent = Tab
-        ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        ImageLabel.BackgroundTransparency = 1.000
-        ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        ImageLabel.BorderSizePixel = 0
-        ImageLabel.Position = UDim2.new(0.144427419, 0, 0.221702576, 0)
-        ImageLabel.Size = UDim2.new(0, 25, 0, 25)
-        ImageLabel.Image = "rbxassetid://10734966248"
+	ImageLabel.Parent = Tab
+	ImageLabel.BackgroundTransparency = 1.000
+	ImageLabel.Position = UDim2.new(0.144, 0, 0.222, 0)
+	ImageLabel.Size = UDim2.new(0, 25, 0, 25)
+	ImageLabel.Image = iconAssetId or "rbxassetid://10734966248" -- 💡 İkon buradan alınıyor
+	ImageLabel.ImageColor3 = Color3.fromRGB(150, 150, 150)
 
-        TextLabel.Parent = Tab
-        TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        TextLabel.BackgroundTransparency = 1.000
-        TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        TextLabel.BorderSizePixel = 0
-        TextLabel.Position = UDim2.new(0.413412273, 0, 0.0416666679, 0)
-        TextLabel.Size = UDim2.new(0, 82, 0, 44)
-        TextLabel.Font = Enum.Font.GothamBold
-        TextLabel.Text = name
-        TextLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-        TextLabel.TextSize = 14.000
-        TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+	TextLabel.Parent = Tab
+	TextLabel.BackgroundTransparency = 1.000
+	TextLabel.Position = UDim2.new(0.413, 0, 0.042, 0)
+	TextLabel.Size = UDim2.new(0, 82, 0, 44)
+	TextLabel.Font = Enum.Font.GothamBold
+	TextLabel.Text = name
+	TextLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+	TextLabel.TextSize = 14.000
+	TextLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-        TabButton.Parent = Tab
-        TabButton.BackgroundTransparency = 1
-        TabButton.Size = UDim2.new(1, 0, 1, 0)
-        TabButton.Text = ""
+	TabButton.Parent = Tab
+	TabButton.BackgroundTransparency = 1
+	TabButton.Size = UDim2.new(1, 0, 1, 0)
+	TabButton.Text = ""
 
-        local TabFunctions = {}
-        TabFunctions.sections = {}
-        TabFunctions.elements = {}
-        TabFunctions.tab = Tab
-        TabFunctions.textLabel = TextLabel
-        TabFunctions.imageLabel = ImageLabel
+	local TabFunctions = {}
+	TabFunctions.sections = {}
+	TabFunctions.elements = {}
+	TabFunctions.tab = Tab
+	TabFunctions.textLabel = TextLabel
+	TabFunctions.imageLabel = ImageLabel
 
-        table.insert(WindowFunctions.tabs, TabFunctions)
+	table.insert(WindowFunctions.tabs, TabFunctions)
 
-        TabButton.MouseButton1Click:Connect(function()
-            for _, tab in pairs(WindowFunctions.tabs) do
-                tab.textLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
-                tab.imageLabel.ImageColor3 = Color3.fromRGB(150, 150, 150)
-                for _, element in pairs(tab.elements) do
-                    element.Visible = false
-                end
-            end
-            
-            TabFunctions.textLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-            TabFunctions.imageLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
-            for _, element in pairs(TabFunctions.elements) do
-                element.Visible = true
-            end
-            
-            WindowFunctions.selectedTab = TabFunctions
-        end)
+	TabButton.MouseButton1Click:Connect(function()
+		for _, tab in pairs(WindowFunctions.tabs) do
+			tab.textLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
+			tab.imageLabel.ImageColor3 = Color3.fromRGB(150, 150, 150)
+			for _, element in pairs(tab.elements) do
+				element.Visible = false
+			end
+		end
 
-        if WindowFunctions.selectedTab == nil then
-            TabFunctions.textLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-            TabFunctions.imageLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
-            WindowFunctions.selectedTab = TabFunctions
-        end
+		TabFunctions.textLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+		TabFunctions.imageLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		for _, element in pairs(TabFunctions.elements) do
+			element.Visible = true
+		end
 
+		WindowFunctions.selectedTab = TabFunctions
+	end)
+
+	if WindowFunctions.selectedTab == nil then
+		TabFunctions.textLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+		TabFunctions.imageLabel.ImageColor3 = Color3.fromRGB(255, 255, 255)
+		WindowFunctions.selectedTab = TabFunctions
+	end
+
+	return TabFunctions
+end
         function TabFunctions:Section(name)
             local SectionTitle = Instance.new("TextLabel")
             
