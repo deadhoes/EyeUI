@@ -288,84 +288,99 @@ function Library:Window(name)
             local SectionFunctions = {}
 
             function SectionFunctions:Button(text, callback)
-                local Button = Instance.new("Frame")
-                local UICorner = Instance.new("UICorner")
-                local Title = Instance.new("TextLabel")
-                local Description = Instance.new("TextLabel")
-                local ImageLabel = Instance.new("ImageLabel")
-                local Interact = Instance.new("TextButton")
+    local TweenService = game:GetService("TweenService")
 
-                Button.Name = "Button"
-                Button.Parent = Elements
-                Button.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-                Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Button.BorderSizePixel = 0
-                Button.Size = UDim2.new(0, 420, 0, 53)
+    local Button = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local Title = Instance.new("TextLabel")
+    local Description = Instance.new("TextLabel")
+    local ImageLabel = Instance.new("ImageLabel")
+    local Interact = Instance.new("TextButton")
 
-                UICorner.CornerRadius = UDim.new(0.200000003, 0)
-                UICorner.Parent = Button
+    Button.Name = "Button"
+    Button.Parent = Elements
+    Button.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+    Button.BorderSizePixel = 0
+    Button.Size = UDim2.new(0, 420, 0, 53)
 
-                Title.Name = "Title"
-                Title.Parent = Button
-                Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Title.BackgroundTransparency = 1.000
-                Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Title.BorderSizePixel = 0
-                Title.Position = UDim2.new(0.048780486, 0, 0.0566037744, 0)
-                Title.Size = UDim2.new(0, 200, 0, 30)
-                Title.Font = Enum.Font.GothamBold
-                Title.Text = text
-                Title.TextColor3 = Color3.fromRGB(230, 230, 230)
-                Title.TextSize = 14.000
-                Title.TextXAlignment = Enum.TextXAlignment.Left
+    UICorner.CornerRadius = UDim.new(0.2, 0)
+    UICorner.Parent = Button
 
-                Description.Name = "Description"
-                Description.Parent = Button
-                Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Description.BackgroundTransparency = 1.000
-                Description.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Description.BorderSizePixel = 0
-                Description.Position = UDim2.new(0.048780486, 0, 0.320754707, 0)
-                Description.Size = UDim2.new(0, 200, 0, 30)
-                Description.Font = Enum.Font.GothamBold
-                Description.Text = "Click to perform action"
-                Description.TextColor3 = Color3.fromRGB(153, 153, 153)
-                Description.TextSize = 14.000
-                Description.TextXAlignment = Enum.TextXAlignment.Left
+    Title.Name = "Title"
+    Title.Parent = Button
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0.048, 0, 0.056, 0)
+    Title.Size = UDim2.new(0, 200, 0, 30)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(230, 230, 230)
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
 
-                ImageLabel.Parent = Button
-                ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                ImageLabel.BackgroundTransparency = 1.000
-                ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                ImageLabel.BorderSizePixel = 0
-                ImageLabel.Position = UDim2.new(0.922207296, 0, 0.308760732, 0)
-                ImageLabel.Size = UDim2.new(0, 20, 0, 20)
-                ImageLabel.Image = "rbxassetid://10734898355"
+    Description.Name = "Description"
+    Description.Parent = Button
+    Description.BackgroundTransparency = 1
+    Description.Position = UDim2.new(0.048, 0, 0.32, 0)
+    Description.Size = UDim2.new(0, 200, 0, 30)
+    Description.Font = Enum.Font.GothamBold
+    Description.Text = "Click to perform action"
+    Description.TextColor3 = Color3.fromRGB(153, 153, 153)
+    Description.TextSize = 14
+    Description.TextXAlignment = Enum.TextXAlignment.Left
 
-                Interact.Name = "Interact"
-                Interact.Parent = Button
-                Interact.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Interact.BackgroundTransparency = 1.000
-                Interact.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Interact.BorderSizePixel = 0
-                Interact.Size = UDim2.new(0, 419, 0, 50)
-                Interact.Font = Enum.Font.SourceSans
-                Interact.Text = ""
-                Interact.TextColor3 = Color3.fromRGB(0, 0, 0)
-                Interact.TextSize = 14.000
+    ImageLabel.Parent = Button
+    ImageLabel.BackgroundTransparency = 1
+    ImageLabel.Position = UDim2.new(0.922, 0, 0.308, 0)
+    ImageLabel.Size = UDim2.new(0, 20, 0, 20)
+    ImageLabel.Image = "rbxassetid://10734898355"
 
-                if WindowFunctions.selectedTab ~= TabFunctions then
-                    Button.Visible = false
-                end
+    Interact.Name = "Interact"
+    Interact.Parent = Button
+    Interact.BackgroundTransparency = 1
+    Interact.Size = UDim2.new(1, 0, 1, 0)
+    Interact.Text = ""
+    Interact.Font = Enum.Font.SourceSans
+    Interact.TextSize = 14
 
-                table.insert(TabFunctions.elements, Button)
+    if WindowFunctions.selectedTab ~= TabFunctions then
+        Button.Visible = false
+    end
 
-                Interact.MouseButton1Click:Connect(function()
-                    if callback then
-                        callback()
-                    end
-                end)
-            end
+    table.insert(TabFunctions.elements, Button)
+
+    Interact.MouseButton1Click:Connect(function(x, y)
+        -- Create wave effect
+        local wave = Instance.new("Frame")
+        wave.Name = "Wave"
+        wave.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+        wave.BackgroundTransparency = 0.5
+        wave.BorderSizePixel = 0
+        wave.Size = UDim2.new(0, 0, 0, 0)
+        wave.AnchorPoint = Vector2.new(0.5, 0.5)
+        wave.Position = UDim2.new(0, x - Interact.AbsolutePosition.X, 0, y - Interact.AbsolutePosition.Y)
+        wave.ZIndex = 10
+        wave.Parent = Interact
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = wave
+
+        local growTween = TweenService:Create(wave, TweenInfo.new(0.4, Enum.EasingStyle.Quad, Enum.EasingDirection.Out), {
+            Size = UDim2.new(0, 300, 0, 300),
+            BackgroundTransparency = 1
+        })
+
+        growTween:Play()
+        growTween.Completed:Connect(function()
+            wave:Destroy()
+        end)
+
+        if callback then
+            callback()
+        end
+    end)
+end
+
 
             function SectionFunctions:Toggle(text, default, callback)
     local TweenService = game:GetService("TweenService")
