@@ -3,7 +3,7 @@ local Library = {}
 function Library:Window(name, description, iconImage)
     local ScreenGui = Instance.new("ScreenGui")
     local Menu = Instance.new("Frame")
-    local Topbar = Instance.new("Folder")
+    local Topbar = Instance.new("Frame")
     local Close = Instance.new("TextButton")
     local ImageLabel = Instance.new("ImageLabel")
     local UICorner = Instance.new("UICorner")
@@ -283,7 +283,7 @@ end
 
             local SectionFunctions = {}
 
-            function SectionFunctions:Button(text, callback)
+            function SectionFunctions:Button(text, description, callback)
     local TweenService = game:GetService("TweenService")
 
     local Button = Instance.new("Frame")
@@ -313,7 +313,7 @@ end
     Title.TextSize = 14
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
-    Description.Name = "Description"
+    Description.Name = description
     Description.Parent = Button
     Description.BackgroundTransparency = 1
     Description.Position = UDim2.new(0.048, 0, 0.32, 0)
@@ -622,7 +622,7 @@ end
                 end)
             end
 
-            function SectionFunctions:Dropdown(text, options, callback)
+            function SectionFunctions:Dropdown(text,description, options, callback)
                 local Dropdown = Instance.new("Frame")
                 local UICorner = Instance.new("UICorner")
                 local Title = Instance.new("TextLabel")
