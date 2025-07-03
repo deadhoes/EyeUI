@@ -452,15 +452,33 @@ function Library:Window(name)
 
                 table.insert(TabFunctions.elements, Toggle)
 
-                local function updateToggle()
-                    if toggled then
-                        ToggleSwitch.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
-                        ToggleButton.Position = UDim2.new(0.5, 0, -0.0666666701, 0)
-                    else
-                        ToggleSwitch.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                        ToggleButton.Position = UDim2.new(-0.00775024435, 0, -0.0666666701, 0)
-                    end
-                end
+                local function updateToggle(toggled)
+	local tweenInfo = TweenInfo.new(
+		0.25, -- süre
+		Enum.EasingStyle.Quad,
+		Enum.EasingDirection.Out
+	)
+
+	-- Renk tween
+	local colorGoal = {}
+	if toggled then
+		colorGoal.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
+	else
+		colorGoal.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+	end
+	local colorTween = TweenService:Create(ToggleSwitch, tweenInfo, colorGoal)
+	colorTween:Play()
+
+	-- Buton pozisyonu tween
+	local positionGoal = {}
+	if toggled then
+		positionGoal.Position = UDim2.new(0.5, 0, -0.0666666701, 0)
+	else
+		positionGoal.Position = UDim2.new(-0.00775024435, 0, -0.0666666701, 0)
+	end
+	local positionTween = TweenService:Create(ToggleButton, tweenInfo, positionGoal)
+	positionTween:Play()
+end
 
                 updateToggle()
 
