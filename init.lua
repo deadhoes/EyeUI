@@ -1,6 +1,6 @@
 local Library = {}
 
-function Library:Window(name)
+function Library:Window(name, description, iconImage)
     local ScreenGui = Instance.new("ScreenGui")
     local Menu = Instance.new("Frame")
     local Topbar = Instance.new("Folder")
@@ -65,7 +65,7 @@ function Library:Window(name)
     ImageLabel.BorderSizePixel = 0
     ImageLabel.Position = UDim2.new(0.0619053431, 0, 0.275676012, 0)
     ImageLabel.Size = UDim2.new(0, 22, 0, 22)
-    ImageLabel.Image = "rbxassetid://10747384394"
+    ImageLabel.Image = iconImage
 
     UICorner.CornerRadius = UDim.new(0.0199999996, 8)
     UICorner.Parent = Close
@@ -84,7 +84,7 @@ function Library:Window(name)
     Title.TextSize = 12.000
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
-    Description.Name = "Description"
+    Description.Name = description
     Description.Parent = Topbar
     Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Description.BackgroundTransparency = 1.000
