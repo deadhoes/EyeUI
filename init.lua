@@ -368,129 +368,107 @@ function Library:Window(name)
             end
 
             function SectionFunctions:Toggle(text, default, callback)
-                local Toggle = Instance.new("Frame")
-                local UICorner = Instance.new("UICorner")
-                local Title = Instance.new("TextLabel")
-                local ToggleSwitch = Instance.new("Frame")
-                local UICorner_2 = Instance.new("UICorner")
-                local ToggleButton = Instance.new("Frame")
-                local UICorner_3 = Instance.new("UICorner")
-                local Description = Instance.new("TextLabel")
-                local Interact = Instance.new("TextButton")
+    local TweenService = game:GetService("TweenService")
 
-                local toggled = default or false
+    local Toggle = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local Title = Instance.new("TextLabel")
+    local ToggleSwitch = Instance.new("Frame")
+    local UICorner_2 = Instance.new("UICorner")
+    local ToggleButton = Instance.new("Frame")
+    local UICorner_3 = Instance.new("UICorner")
+    local Description = Instance.new("TextLabel")
+    local Interact = Instance.new("TextButton")
 
-                Toggle.Name = "Toggle"
-                Toggle.Parent = Elements
-                Toggle.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
-                Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Toggle.BorderSizePixel = 0
-                Toggle.Size = UDim2.new(0, 420, 0, 53)
+    local toggled = default or false
 
-                UICorner.CornerRadius = UDim.new(0.200000003, 0)
-                UICorner.Parent = Toggle
+    Toggle.Name = "Toggle"
+    Toggle.Parent = Elements
+    Toggle.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
+    Toggle.BorderSizePixel = 0
+    Toggle.Size = UDim2.new(0, 420, 0, 53)
 
-                Title.Name = "Title"
-                Title.Parent = Toggle
-                Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Title.BackgroundTransparency = 1.000
-                Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Title.BorderSizePixel = 0
-                Title.Position = UDim2.new(0.0487804599, 0, 0.0570333228, 0)
-                Title.Size = UDim2.new(0, 200, 0, 30)
-                Title.Font = Enum.Font.GothamBold
-                Title.Text = text
-                Title.TextColor3 = Color3.fromRGB(230, 230, 230)
-                Title.TextSize = 14.000
-                Title.TextXAlignment = Enum.TextXAlignment.Left
+    UICorner.CornerRadius = UDim.new(0.2, 0)
+    UICorner.Parent = Toggle
 
-                ToggleSwitch.Name = "ToggleSwitch"
-                ToggleSwitch.Parent = Toggle
-                ToggleSwitch.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-                ToggleSwitch.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                ToggleSwitch.BorderSizePixel = 0
-                ToggleSwitch.Position = UDim2.new(0.869, 0, 0.356, 0)
-                ToggleSwitch.Size = UDim2.new(0, 35, 0, 15)
+    Title.Name = "Title"
+    Title.Parent = Toggle
+    Title.BackgroundTransparency = 1
+    Title.Position = UDim2.new(0.048, 0, 0.057, 0)
+    Title.Size = UDim2.new(0, 200, 0, 30)
+    Title.Font = Enum.Font.GothamBold
+    Title.Text = text
+    Title.TextColor3 = Color3.fromRGB(230, 230, 230)
+    Title.TextSize = 14
+    Title.TextXAlignment = Enum.TextXAlignment.Left
 
-                UICorner_2.CornerRadius = UDim.new(0.40, 0)
-                UICorner_2.Parent = ToggleSwitch
+    ToggleSwitch.Name = "ToggleSwitch"
+    ToggleSwitch.Parent = Toggle
+    ToggleSwitch.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+    ToggleSwitch.Position = UDim2.new(0.869, 0, 0.356, 0)
+    ToggleSwitch.Size = UDim2.new(0, 35, 0, 15)
 
-                ToggleButton.Name = "ToggleButton"
-                ToggleButton.Parent = ToggleSwitch
-                ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                ToggleButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                ToggleButton.BorderSizePixel = 0
-                ToggleButton.Position = UDim2.new(-0.00775024435, 0, -0.0666666701, 0)
-                ToggleButton.Size = UDim2.new(0, 18, 0, 18)
+    UICorner_2.CornerRadius = UDim.new(0.4, 0)
+    UICorner_2.Parent = ToggleSwitch
 
-                UICorner_3.CornerRadius = UDim.new(1, 0)
-                UICorner_3.Parent = ToggleButton
+    ToggleButton.Name = "ToggleButton"
+    ToggleButton.Parent = ToggleSwitch
+    ToggleButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    ToggleButton.Position = UDim2.new(-0.0077, 0, -0.0666, 0)
+    ToggleButton.Size = UDim2.new(0, 18, 0, 18)
 
-                Description.Name = "Description"
-                Description.Parent = Toggle
-                Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-                Description.BackgroundTransparency = 1.000
-                Description.BorderColor3 = Color3.fromRGB(0, 0, 0)
-                Description.BorderSizePixel = 0
-                Description.Position = UDim2.new(0.0463995077, 0, 0.301886797, 0)
-                Description.Size = UDim2.new(0, 200, 0, 30)
-                Description.Font = Enum.Font.GothamBold
-                Description.Text = "Toggle to enable or disable the feature"
-                Description.TextColor3 = Color3.fromRGB(153, 153, 153)
-                Description.TextSize = 14.000
-                Description.TextXAlignment = Enum.TextXAlignment.Left
+    UICorner_3.CornerRadius = UDim.new(1, 0)
+    UICorner_3.Parent = ToggleButton
 
-                Interact.Name = "Interact"
-                Interact.Parent = Toggle
-                Interact.BackgroundTransparency = 1
-                Interact.Size = UDim2.new(1, 0, 1, 0)
-                Interact.Text = ""
+    Description.Name = "Description"
+    Description.Parent = Toggle
+    Description.BackgroundTransparency = 1
+    Description.Position = UDim2.new(0.046, 0, 0.301, 0)
+    Description.Size = UDim2.new(0, 200, 0, 30)
+    Description.Font = Enum.Font.GothamBold
+    Description.Text = "Toggle to enable or disable the feature"
+    Description.TextColor3 = Color3.fromRGB(153, 153, 153)
+    Description.TextSize = 14
+    Description.TextXAlignment = Enum.TextXAlignment.Left
 
-                if WindowFunctions.selectedTab ~= TabFunctions then
-                    Toggle.Visible = false
-                end
+    Interact.Name = "Interact"
+    Interact.Parent = Toggle
+    Interact.BackgroundTransparency = 1
+    Interact.Size = UDim2.new(1, 0, 1, 0)
+    Interact.Text = ""
 
-                table.insert(TabFunctions.elements, Toggle)
+    if WindowFunctions.selectedTab ~= TabFunctions then
+        Toggle.Visible = false
+    end
 
-                local function updateToggle(toggled)
-	local tweenInfo = TweenInfo.new(
-		0.25, -- süre
-		Enum.EasingStyle.Quad,
-		Enum.EasingDirection.Out
-	)
+    table.insert(TabFunctions.elements, Toggle)
 
-	-- Renk tween
-	local colorGoal = {}
-	if toggled then
-		colorGoal.BackgroundColor3 = Color3.fromRGB(70, 130, 180)
-	else
-		colorGoal.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
-	end
-	local colorTween = TweenService:Create(ToggleSwitch, tweenInfo, colorGoal)
-	colorTween:Play()
+    local function updateToggle(state)
+        local tweenInfo = TweenInfo.new(0.25, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-	-- Buton pozisyonu tween
-	local positionGoal = {}
-	if toggled then
-		positionGoal.Position = UDim2.new(0.5, 0, -0.0666666701, 0)
-	else
-		positionGoal.Position = UDim2.new(-0.00775024435, 0, -0.0666666701, 0)
-	end
-	local positionTween = TweenService:Create(ToggleButton, tweenInfo, positionGoal)
-	positionTween:Play()
+        local colorGoal = {
+            BackgroundColor3 = state and Color3.fromRGB(70, 130, 180) or Color3.fromRGB(40, 40, 40)
+        }
+
+        local posGoal = {
+            Position = state and UDim2.new(0.5, 0, -0.0666, 0) or UDim2.new(-0.0077, 0, -0.0666, 0)
+        }
+
+        TweenService:Create(ToggleSwitch, tweenInfo, colorGoal):Play()
+        TweenService:Create(ToggleButton, tweenInfo, posGoal):Play()
+    end
+
+    updateToggle(toggled)
+
+    Interact.MouseButton1Click:Connect(function()
+        toggled = not toggled
+        updateToggle(toggled)
+        if callback then
+            callback(toggled)
+        end
+    end)
 end
-
-                updateToggle()
-
-                Interact.MouseButton1Click:Connect(function()
-                    toggled = not toggled
-                    updateToggle()
-                    if callback then
-                        callback(toggled)
-                    end
-                end)
-            end
-
+			
             function SectionFunctions:Slider(text, min, max, default, callback)
                 local Slider = Instance.new("Frame")
                 local UICorner = Instance.new("UICorner")
