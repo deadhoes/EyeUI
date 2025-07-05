@@ -9,7 +9,8 @@ function EyeUI:CreateWindow(config)
         size = UDim2.new(0, 626, 0, 414),
         position = UDim2.new(0.3, 0, 0.3, 0),
         closeIcon = "rbxassetid://10747384394",
-        showIcon = true
+        showIcon = true,
+        tabSize = UDim2.new(0, 150, 0, 358) -- Added tab size configuration
     }
     
     -- Merge user config with defaults
@@ -52,15 +53,15 @@ function EyeUI:CreateWindow(config)
     -- Topbar
     Topbar.Name = "Topbar"
     Topbar.Parent = Frame
-    Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Topbar.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Darker for contrast
     Topbar.BorderColor3 = Color3.fromRGB(0, 0, 0)
     Topbar.BorderSizePixel = 0
     Topbar.Size = UDim2.new(1, 0, 0, 50)
 
-    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.CornerRadius = UDim.new(0, 0)
     UICorner_2.Parent = Topbar
 
-    -- Title
+    -- Title and subtitle (same as before)
     local titleXPosition = config.showIcon and 0.08 or 0.022
     TitleLabel.Parent = Topbar
     TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
@@ -75,7 +76,6 @@ function EyeUI:CreateWindow(config)
     TitleLabel.TextSize = 14.000
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Subtitle
     SubtitleLabel.Parent = Topbar
     SubtitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     SubtitleLabel.BackgroundTransparency = 1.000
@@ -89,7 +89,7 @@ function EyeUI:CreateWindow(config)
     SubtitleLabel.TextSize = 12.000
     SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Icon
+    -- Icon (same as before)
     IconImage.Parent = Topbar
     IconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     IconImage.BackgroundTransparency = 1.000
@@ -101,7 +101,7 @@ function EyeUI:CreateWindow(config)
     IconImage.Visible = config.showIcon
     IconImage.Name = "WindowIcon"
 
-    -- Close button
+    -- Close button (same as before)
     CloseButton.Parent = Topbar
     CloseButton.BackgroundColor3 = Color3.fromRGB(84, 75, 75)
     CloseButton.BackgroundTransparency = 1.000
@@ -123,15 +123,16 @@ function EyeUI:CreateWindow(config)
     CloseIcon.Size = UDim2.new(0, 23, 0, 23)
     CloseIcon.Image = config.closeIcon
 
-    -- Tab system implementation
+    -- Fixed Tab system implementation
     TabsContainer.Name = "Tabs"
     TabsContainer.Parent = Frame
-    TabsContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TabsContainer.BackgroundTransparency = 1.000
-    TabsContainer.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TabsContainer.BorderSizePixel = 0
-    TabsContainer.Position = UDim2.new(0, 0, 0.135, 0)
-    TabsContainer.Size = UDim2.new(0, 139, 0, 358)
+    TabsContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Visible background
+    TabsContainer.BackgroundTransparency = 0.5 -- Semi-transparent
+    TabsContainer.BorderColor3 = Color3.fromRGB(50, 50, 50)
+    TabsContainer.BorderSizePixel = 1
+    TabsContainer.Position = UDim2.new(0, 5, 0.135, 5) -- Adjusted position with padding
+    TabsContainer.Size = config.tabSize
+    TabsContainer.ClipsDescendants = true
 
     UIListLayout.Parent = TabsContainer
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
@@ -139,75 +140,102 @@ function EyeUI:CreateWindow(config)
 
     TabContentContainer.Name = "TabContent"
     TabContentContainer.Parent = Frame
-    TabContentContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TabContentContainer.BackgroundTransparency = 1.000
-    TabContentContainer.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TabContentContainer.BorderSizePixel = 0
-    TabContentContainer.Position = UDim2.new(0.23, 0, 0.135, 0)
-    TabContentContainer.Size = UDim2.new(0.75, -10, 0, 358)
+    TabContentContainer.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    TabContentContainer.BackgroundTransparency = 0.3
+    TabContentContainer.BorderColor3 = Color3.fromRGB(50, 50, 50)
+    TabContentContainer.BorderSizePixel = 1
+    TabContentContainer.Position = UDim2.new(0, config.tabSize.X.Offset + 10, 0.135, 5)
+    TabContentContainer.Size = UDim2.new(1, -config.tabSize.X.Offset - 15, 0, 358)
+    TabContentContainer.ClipsDescendants = true
 
     -- Close button functionality
     CloseButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
 
-    -- Tab creation function
+    -- Improved Tab creation function
     local function CreateTab(tabName, tabIcon)
         local tabButton = Instance.new("Frame")
         local tabText = Instance.new("TextLabel")
         local tabIconImage = Instance.new("ImageLabel")
-        local tabContent = Instance.new("Frame")
+        local tabContent = Instance.new("ScrollingFrame") -- Changed to ScrollingFrame
+        local contentLayout = Instance.new("UIListLayout")
         
+        -- Tab Button
         tabButton.Name = tabName
         tabButton.Parent = TabsContainer
-        tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        tabButton.BackgroundTransparency = 1.000
-        tabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        tabButton.BorderSizePixel = 0
-        tabButton.Size = UDim2.new(0, 139, 0, 56)
+        tabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+        tabButton.BorderColor3 = Color3.fromRGB(50, 50, 50)
+        tabButton.BorderSizePixel = 1
+        tabButton.Size = UDim2.new(1, -10, 0, 50)
         
+        -- Tab Icon
+        tabIconImage.Parent = tabButton
+        tabIconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        tabIconImage.BackgroundTransparency = 1.000
+        tabIconImage.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabIconImage.BorderSizePixel = 0
+        tabIconImage.Position = UDim2.new(0.05, 0, 0.2, 0)
+        tabIconImage.Size = UDim2.new(0, 30, 0, 30)
+        tabIconImage.Image = tabIcon or "rbxassetid://10734895856"
+        
+        -- Tab Text
         tabText.Parent = tabButton
         tabText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         tabText.BackgroundTransparency = 1.000
         tabText.BorderColor3 = Color3.fromRGB(0, 0, 0)
         tabText.BorderSizePixel = 0
-        tabText.Position = UDim2.new(0.356, 0, 0.036, 0)
-        tabText.Size = UDim2.new(0, 79, 0, 50)
+        tabText.Position = UDim2.new(0.3, 0, 0, 0)
+        tabText.Size = UDim2.new(0.65, 0, 1, 0)
         tabText.Font = Enum.Font.GothamBold
         tabText.Text = tabName
         tabText.TextColor3 = Color3.fromRGB(230, 230, 230)
         tabText.TextSize = 12.000
         tabText.TextXAlignment = Enum.TextXAlignment.Left
         
-        tabIconImage.Parent = tabButton
-        tabIconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        tabIconImage.BackgroundTransparency = 1.000
-        tabIconImage.BorderColor3 = Color3.fromRGB(0, 0, 0)
-        tabIconImage.BorderSizePixel = 0
-        tabIconImage.Position = UDim2.new(0.129, 0, 0.321, 0)
-        tabIconImage.Size = UDim2.new(0, 20, 0, 20)
-        tabIconImage.Image = tabIcon or "rbxassetid://10734895856"
-        
+        -- Tab Content
         tabContent.Name = tabName.."Content"
         tabContent.Parent = TabContentContainer
-        tabContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-        tabContent.BackgroundTransparency = 1.000
-        tabContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabContent.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        tabContent.BackgroundTransparency = 0.5
         tabContent.BorderSizePixel = 0
         tabContent.Size = UDim2.new(1, 0, 1, 0)
+        tabContent.CanvasSize = UDim2.new(0, 0, 0, 0)
+        tabContent.ScrollBarThickness = 5
         tabContent.Visible = false
+        
+        contentLayout.Parent = tabContent
+        contentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        contentLayout.Padding = UDim.new(0, 5)
+        
+        -- Auto-resize content
+        contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            tabContent.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 10)
+        end)
         
         -- Make first tab visible by default
         if #TabsContainer:GetChildren() == 2 then -- 1 for UIListLayout
             tabContent.Visible = true
-            tabButton.BackgroundTransparency = 0.9
+            tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         end
         
         -- Tab button click functionality
+        tabButton.MouseEnter:Connect(function()
+            if not tabContent.Visible then
+                tabButton.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
+            end
+        end)
+        
+        tabButton.MouseLeave:Connect(function()
+            if not tabContent.Visible then
+                tabButton.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+            end
+        end)
+        
         tabButton.MouseButton1Click:Connect(function()
             -- Hide all tab contents
             for _, content in ipairs(TabContentContainer:GetChildren()) do
-                if content:IsA("Frame") then
+                if content:IsA("ScrollingFrame") then
                     content.Visible = false
                 end
             end
@@ -215,13 +243,13 @@ function EyeUI:CreateWindow(config)
             -- Reset all tab button appearances
             for _, tab in ipairs(TabsContainer:GetChildren()) do
                 if tab:IsA("Frame") then
-                    tab.BackgroundTransparency = 1.000
+                    tab.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
                 end
             end
             
             -- Show selected tab content
             tabContent.Visible = true
-            tabButton.BackgroundTransparency = 0.9
+            tabButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
         end)
         
         return {
@@ -232,6 +260,10 @@ function EyeUI:CreateWindow(config)
             end,
             SetIcon = function(self, newIcon)
                 tabIconImage.Image = newIcon
+            end,
+            AddElement = function(self, element)
+                element.Parent = tabContent
+                return element
             end
         }
     end
