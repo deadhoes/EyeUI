@@ -1,6 +1,6 @@
 -- Eye UI Library
 -- Modern UI Library for Roblox
--- Version: 1.0
+-- Version: 1.1 (Fixed)
 
 local EyeUI = {}
 EyeUI.__index = EyeUI
@@ -193,7 +193,8 @@ function EyeUI:CreateWindow(options)
         Position = UDim2.new(0.232, 0, 0.131, 0),
         Size = UDim2.new(0, 444, 0, 338),
         ScrollBarThickness = 7,
-        ScrollBarImageColor3 = Color3.fromRGB(70, 70, 70)
+        ScrollBarImageColor3 = Color3.fromRGB(70, 70, 70),
+        CanvasSize = UDim2.new(0, 0, 0, 0)
     })
     
     local contentPadding = CreateInstance("UIPadding", {
@@ -209,6 +210,11 @@ function EyeUI:CreateWindow(options)
         SortOrder = Enum.SortOrder.LayoutOrder,
         Padding = UDim.new(0, 7)
     })
+    
+    -- Auto-resize content frame
+    contentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+        contentFrame.CanvasSize = UDim2.new(0, 0, 0, contentLayout.AbsoluteContentSize.Y + 20)
+    end)
     
     -- Drag functionality
     local dragBar = CreateInstance("Frame", {
@@ -303,7 +309,8 @@ function EyeUI:CreateWindow(options)
             Size = UDim2.new(0, 127, 0, 48)
         })
         
-        local tabIcon = CreateInstance("ImageLabel", {
+        local tabIconLabel = CreateInstance("ImageLabel", {
+            Name = "Icon",
             Parent = tabButton,
             BackgroundTransparency = 1,
             Position = UDim2.new(0.144, 0, 0.222, 0),
@@ -347,10 +354,15 @@ function EyeUI:CreateWindow(options)
             Padding = UDim.new(0, 7)
         })
         
+        -- Auto-resize tab content
+        tabContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            tabContent.Size = UDim2.new(1, 0, 0, tabContentLayout.AbsoluteContentSize.Y)
+        end)
+        
         -- Tab object
         tab.Button = tabButton
         tab.Content = tabContent
-        tab.Icon = tabIcon
+        tab.Icon = tabIconLabel
         tab.Label = tabLabel
         tab.IsActive = isActive
         tab.Elements = {}
@@ -369,11 +381,17 @@ function EyeUI:CreateWindow(options)
         
         -- Tab functions
         function tab:CreateSection(text)
-            local section = CreateInstance("TextLabel", {
+            local section = CreateInstance("Frame", {
                 Name = "Section",
                 Parent = self.Content,
                 BackgroundTransparency = 1,
-                Size = UDim2.new(1, 0, 0, 25),
+                Size = UDim2.new(1, 0, 0, 25)
+            })
+            
+            local sectionLabel = CreateInstance("TextLabel", {
+                Parent = section,
+                BackgroundTransparency = 1,
+                Size = UDim2.new(1, 0, 1, 0),
                 Font = Enum.Font.GothamBold,
                 Text = text or "Section",
                 TextColor3 = Color3.fromRGB(230, 230, 230),
@@ -381,7 +399,6 @@ function EyeUI:CreateWindow(options)
                 TextXAlignment = Enum.TextXAlignment.Left
             })
             
-            self.Content.CanvasSize = UDim2.new(0, 0, 0, self.Content.CanvasSize.Y.Offset + 25)
             return section
         end
         
@@ -487,8 +504,6 @@ function EyeUI:CreateWindow(options)
                 updateToggle()
             end)
             
-            self.Content.CanvasSize = UDim2.new(0, 0, 0, self.Content.CanvasSize.Y.Offset + 60)
-            
             return {
                 SetValue = function(value)
                     isToggled = value
@@ -568,8 +583,6 @@ function EyeUI:CreateWindow(options)
                 callback()
             end)
             
-            self.Content.CanvasSize = UDim2.new(0, 0, 0, self.Content.CanvasSize.Y.Offset + 60)
-            
             return button
         end
         
@@ -640,8 +653,6 @@ function EyeUI:CreateWindow(options)
             textbox.FocusLost:Connect(function()
                 callback(textbox.Text)
             end)
-            
-            self.Content.CanvasSize = UDim2.new(0, 0, 0, self.Content.CanvasSize.Y.Offset + 60)
             
             return {
                 SetText = function(text)
