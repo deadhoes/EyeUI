@@ -148,42 +148,69 @@ function Library:Window(name, description, iconImage)
         ScreenGui:Destroy()
     end)
 
-    -- Sürükleme sistemi düzeltmesi
-    local UIS = game:GetService("UserInputService")
-    local dragging = false
-    local dragInput, dragStart, startPos
-    
-    local function update(input)
-        local delta = input.Position - dragStart
-        Menu.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X,
-            startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-    end
-    
-    Drag.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 then
-            dragging = true
-            dragStart = input.Position
-            startPos = Menu.Position
-    
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then
-                    dragging = false
-                end
-            end)
-        end
-    end)
-    
-    Drag.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement then
-            dragInput = input
-        end
-    end)
-    
-    UIS.InputChanged:Connect(function(input)
-        if input == dragInput and dragging then
-            update(input)
-        end
-    end)
+    -- Smooth Drag Sistemi
+local UIS = game:GetService("UserInputService")
+local RunService = game:GetService("RunService")
+
+local dragging = false
+local dragInput, dragStart, startPos
+local targetPosition
+local currentPosition = Menu.Position
+
+-- Delta ile hedef pozisyonu hesapla
+local function update(input)
+	local delta = input.Position - dragStart
+	targetPosition = UDim2.new(
+		startPos.X.Scale, startPos.X.Offset + delta.X,
+		startPos.Y.Scale, startPos.Y.Offset + delta.Y
+	)
+end
+
+-- Sürükleme başladığında
+Drag.InputBegan:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseButton1 then
+		dragging = true
+		dragStart = input.Position
+		startPos = Menu.Position
+		targetPosition = Menu.Position
+
+		input.Changed:Connect(function()
+			if input.UserInputState == Enum.UserInputState.End then
+				dragging = false
+			end
+		end)
+	end
+end)
+
+-- Sürükleme hareketi başladığında
+Drag.InputChanged:Connect(function(input)
+	if input.UserInputType == Enum.UserInputType.MouseMovement then
+		dragInput = input
+	end
+end)
+
+-- Delta'yı güncelle
+UIS.InputChanged:Connect(function(input)
+	if input == dragInput and dragging then
+		update(input)
+	end
+end)
+
+-- Akıcı pozisyon geçişi
+RunService.RenderStepped:Connect(function(dt)
+	if targetPosition then
+		-- Smooth geçiş (lerp benzeri)
+		local lerpSpeed = 15
+		local current = Menu.Position
+
+		Menu.Position = UDim2.new(
+			current.X.Scale,
+			current.X.Offset + (targetPosition.X.Offset - current.X.Offset) * dt * lerpSpeed,
+			current.Y.Scale,
+			current.Y.Offset + (targetPosition.Y.Offset - current.Y.Offset) * dt * lerpSpeed
+		)
+	end
+end)
 
     local WindowFunctions = {}
     WindowFunctions.tabs = {}
