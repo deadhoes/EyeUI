@@ -84,7 +84,7 @@ function Library:Window(name, description, iconImage)
     Title.TextSize = 12.000
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
-    Description.Name = description
+    Description.Name = "Description"  -- Fixed name
     Description.Parent = Topbar
     Description.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     Description.BackgroundTransparency = 1.000
@@ -93,11 +93,11 @@ function Library:Window(name, description, iconImage)
     Description.Position = UDim2.new(0.0913793072, 0, 0.0307692308, 0)
     Description.Size = UDim2.new(0, 266, 0, 38)
     Description.Font = Enum.Font.GothamBold
-    Description.Text = "premium ui library"
+    Description.Text = description or "premium ui library"
     Description.TextColor3 = Color3.fromRGB(176, 176, 176)
     Description.TextSize = 12.000
     Description.TextXAlignment = Enum.TextXAlignment.Left
-
+	
     Image.Name = "Image"
     Image.Parent = Topbar
     Image.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
