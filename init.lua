@@ -8,7 +8,8 @@ function EyeUI:CreateWindow(config)
         icon = "rbxassetid://10747364761", -- Default eye icon
         size = UDim2.new(0, 626, 0, 414),
         position = UDim2.new(0.3, 0, 0.3, 0), -- Centered position
-        closeIcon = "rbxassetid://10747384394"
+        closeIcon = "rbxassetid://10747384394",
+        showIcon = true -- Added to control icon visibility
     }
     
     -- Merge user config with defaults
@@ -53,13 +54,17 @@ function EyeUI:CreateWindow(config)
     UICorner_2.CornerRadius = UDim.new(1, 0)
     UICorner_2.Parent = Topbar
 
+    -- Calculate positions based on icon visibility
+    local titleXPosition = config.showIcon and 0.08 or 0.022
+    local subtitleXPosition = config.showIcon and 0.08 or 0.022
+
     -- Title
     TextLabel.Parent = Topbar
     TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     TextLabel.BackgroundTransparency = 1.000
     TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel.BorderSizePixel = 0
-    TextLabel.Position = UDim2.new(0.08, 0, -0.14, 0)
+    TextLabel.Position = UDim2.new(titleXPosition, 0, -0.14, 0)
     TextLabel.Size = UDim2.new(0, 416, 0, 50)
     TextLabel.Font = Enum.Font.GothamBold
     TextLabel.Text = config.title
@@ -73,7 +78,7 @@ function EyeUI:CreateWindow(config)
     TextLabel_2.BackgroundTransparency = 1.000
     TextLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
     TextLabel_2.BorderSizePixel = 0
-    TextLabel_2.Position = UDim2.new(0.08, 0, 0.12, 0)
+    TextLabel_2.Position = UDim2.new(subtitleXPosition, 0, 0.12, 0)
     TextLabel_2.Size = UDim2.new(0, 416, 0, 50)
     TextLabel_2.Font = Enum.Font.GothamBold
     TextLabel_2.Text = config.subtitle
@@ -81,7 +86,7 @@ function EyeUI:CreateWindow(config)
     TextLabel_2.TextSize = 12.000
     TextLabel_2.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Customizable icon
+    -- Icon (only shown if showIcon is true)
     ImageLabel.Parent = Topbar
     ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
     ImageLabel.BackgroundTransparency = 1.000
@@ -90,6 +95,7 @@ function EyeUI:CreateWindow(config)
     ImageLabel.Position = UDim2.new(0.022, 0, 0.22, 0)
     ImageLabel.Size = UDim2.new(0, 25, 0, 25)
     ImageLabel.Image = config.icon
+    ImageLabel.Visible = config.showIcon
     ImageLabel.Name = "WindowIcon"
 
     -- Close button
@@ -140,8 +146,17 @@ function EyeUI:CreateWindow(config)
             TextLabel_2.Text = newSubtitle
         end,
         
-        SetIcon = function(self, newIconId)
+        SetIcon = function(self, newIconId, visible)
+            visible = visible == nil and true or visible
             ImageLabel.Image = newIconId
+            ImageLabel.Visible = visible
+            
+            -- Adjust text positions based on icon visibility
+            local newTitleX = visible and 0.08 or 0.022
+            local newSubtitleX = visible and 0.08 or 0.022
+            
+            TextLabel.Position = UDim2.new(newTitleX, 0, TextLabel.Position.Y.Scale, TextLabel.Position.Y.Offset)
+            TextLabel_2.Position = UDim2.new(newSubtitleX, 0, TextLabel_2.Position.Y.Scale, TextLabel_2.Position.Y.Offset)
         end
     }
 end
