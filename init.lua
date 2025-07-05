@@ -26,7 +26,7 @@ end
 
 local function Tween(object, properties, duration, easingStyle, easingDirection)
     local tweenInfo = TweenInfo.new(
-        duration or 0.3,
+        duration or 0.1,
         easingStyle or Enum.EasingStyle.Quad,
         easingDirection or Enum.EasingDirection.Out
     )
