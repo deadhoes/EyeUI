@@ -5,11 +5,11 @@ function EyeUI:CreateWindow(config)
     local defaultConfig = {
         title = "EyeUI",
         subtitle = "subtitle",
-        icon = "rbxassetid://10747364761", -- Default eye icon
+        icon = "rbxassetid://10747364761",
         size = UDim2.new(0, 626, 0, 414),
-        position = UDim2.new(0.3, 0, 0.3, 0), -- Centered position
+        position = UDim2.new(0.3, 0, 0.3, 0),
         closeIcon = "rbxassetid://10747384394",
-        showIcon = true -- Added to control icon visibility
+        showIcon = true
     }
     
     -- Merge user config with defaults
@@ -21,11 +21,16 @@ function EyeUI:CreateWindow(config)
     local UICorner = Instance.new("UICorner")
     local Topbar = Instance.new("Frame")
     local UICorner_2 = Instance.new("UICorner")
-    local TextLabel = Instance.new("TextLabel")
-    local TextLabel_2 = Instance.new("TextLabel")
-    local ImageLabel = Instance.new("ImageLabel")
-    local TextButton = Instance.new("TextButton")
-    local ImageLabel_2 = Instance.new("ImageLabel")
+    local TitleLabel = Instance.new("TextLabel")
+    local SubtitleLabel = Instance.new("TextLabel")
+    local IconImage = Instance.new("ImageLabel")
+    local CloseButton = Instance.new("TextButton")
+    local CloseIcon = Instance.new("ImageLabel")
+    
+    -- Tab system elements
+    local TabsContainer = Instance.new("Frame")
+    local TabContentContainer = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
 
     -- Properties
     ScreenGui.Name = "EyeUI"
@@ -44,6 +49,7 @@ function EyeUI:CreateWindow(config)
     UICorner.CornerRadius = UDim.new(0.02, 8)
     UICorner.Parent = Frame
 
+    -- Topbar
     Topbar.Name = "Topbar"
     Topbar.Parent = Frame
     Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
@@ -54,109 +60,218 @@ function EyeUI:CreateWindow(config)
     UICorner_2.CornerRadius = UDim.new(1, 0)
     UICorner_2.Parent = Topbar
 
-    -- Calculate positions based on icon visibility
-    local titleXPosition = config.showIcon and 0.08 or 0.022
-    local subtitleXPosition = config.showIcon and 0.08 or 0.022
-
     -- Title
-    TextLabel.Parent = Topbar
-    TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel.BackgroundTransparency = 1.000
-    TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextLabel.BorderSizePixel = 0
-    TextLabel.Position = UDim2.new(titleXPosition, 0, -0.14, 0)
-    TextLabel.Size = UDim2.new(0, 416, 0, 50)
-    TextLabel.Font = Enum.Font.GothamBold
-    TextLabel.Text = config.title
-    TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-    TextLabel.TextSize = 14.000
-    TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+    local titleXPosition = config.showIcon and 0.08 or 0.022
+    TitleLabel.Parent = Topbar
+    TitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.BackgroundTransparency = 1.000
+    TitleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TitleLabel.BorderSizePixel = 0
+    TitleLabel.Position = UDim2.new(titleXPosition, 0, -0.14, 0)
+    TitleLabel.Size = UDim2.new(0, 416, 0, 50)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.Text = config.title
+    TitleLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+    TitleLabel.TextSize = 14.000
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
     -- Subtitle
-    TextLabel_2.Parent = Topbar
-    TextLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    TextLabel_2.BackgroundTransparency = 1.000
-    TextLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextLabel_2.BorderSizePixel = 0
-    TextLabel_2.Position = UDim2.new(subtitleXPosition, 0, 0.12, 0)
-    TextLabel_2.Size = UDim2.new(0, 416, 0, 50)
-    TextLabel_2.Font = Enum.Font.GothamBold
-    TextLabel_2.Text = config.subtitle
-    TextLabel_2.TextColor3 = Color3.fromRGB(200, 200, 200)
-    TextLabel_2.TextSize = 12.000
-    TextLabel_2.TextXAlignment = Enum.TextXAlignment.Left
+    SubtitleLabel.Parent = Topbar
+    SubtitleLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    SubtitleLabel.BackgroundTransparency = 1.000
+    SubtitleLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    SubtitleLabel.BorderSizePixel = 0
+    SubtitleLabel.Position = UDim2.new(titleXPosition, 0, 0.12, 0)
+    SubtitleLabel.Size = UDim2.new(0, 416, 0, 50)
+    SubtitleLabel.Font = Enum.Font.GothamBold
+    SubtitleLabel.Text = config.subtitle
+    SubtitleLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    SubtitleLabel.TextSize = 12.000
+    SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Icon (only shown if showIcon is true)
-    ImageLabel.Parent = Topbar
-    ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    ImageLabel.BackgroundTransparency = 1.000
-    ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ImageLabel.BorderSizePixel = 0
-    ImageLabel.Position = UDim2.new(0.022, 0, 0.22, 0)
-    ImageLabel.Size = UDim2.new(0, 25, 0, 25)
-    ImageLabel.Image = config.icon
-    ImageLabel.Visible = config.showIcon
-    ImageLabel.Name = "WindowIcon"
+    -- Icon
+    IconImage.Parent = Topbar
+    IconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    IconImage.BackgroundTransparency = 1.000
+    IconImage.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    IconImage.BorderSizePixel = 0
+    IconImage.Position = UDim2.new(0.022, 0, 0.22, 0)
+    IconImage.Size = UDim2.new(0, 25, 0, 25)
+    IconImage.Image = config.icon
+    IconImage.Visible = config.showIcon
+    IconImage.Name = "WindowIcon"
 
     -- Close button
-    TextButton.Parent = Topbar
-    TextButton.BackgroundColor3 = Color3.fromRGB(84, 75, 75)
-    TextButton.BackgroundTransparency = 1.000
-    TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    TextButton.BorderSizePixel = 0
-    TextButton.Position = UDim2.new(0.929, 0, 0, 0)
-    TextButton.Size = UDim2.new(0, 32, 0, 50)
-    TextButton.Font = Enum.Font.SourceSans
-    TextButton.Text = ""
-    TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-    TextButton.TextSize = 14.000
+    CloseButton.Parent = Topbar
+    CloseButton.BackgroundColor3 = Color3.fromRGB(84, 75, 75)
+    CloseButton.BackgroundTransparency = 1.000
+    CloseButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    CloseButton.BorderSizePixel = 0
+    CloseButton.Position = UDim2.new(0.929, 0, 0, 0)
+    CloseButton.Size = UDim2.new(0, 32, 0, 50)
+    CloseButton.Font = Enum.Font.SourceSans
+    CloseButton.Text = ""
+    CloseButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    CloseButton.TextSize = 14.000
 
-    ImageLabel_2.Parent = TextButton
-    ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-    ImageLabel_2.BackgroundTransparency = 1.000
-    ImageLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    ImageLabel_2.BorderSizePixel = 0
-    ImageLabel_2.Position = UDim2.new(0.246, 0, 0.203, 0)
-    ImageLabel_2.Size = UDim2.new(0, 23, 0, 23)
-    ImageLabel_2.Image = config.closeIcon
+    CloseIcon.Parent = CloseButton
+    CloseIcon.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    CloseIcon.BackgroundTransparency = 1.000
+    CloseIcon.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    CloseIcon.BorderSizePixel = 0
+    CloseIcon.Position = UDim2.new(0.246, 0, 0.203, 0)
+    CloseIcon.Size = UDim2.new(0, 23, 0, 23)
+    CloseIcon.Image = config.closeIcon
+
+    -- Tab system implementation
+    TabsContainer.Name = "Tabs"
+    TabsContainer.Parent = Frame
+    TabsContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TabsContainer.BackgroundTransparency = 1.000
+    TabsContainer.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TabsContainer.BorderSizePixel = 0
+    TabsContainer.Position = UDim2.new(0, 0, 0.135, 0)
+    TabsContainer.Size = UDim2.new(0, 139, 0, 358)
+
+    UIListLayout.Parent = TabsContainer
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 5)
+
+    TabContentContainer.Name = "TabContent"
+    TabContentContainer.Parent = Frame
+    TabContentContainer.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+    TabContentContainer.BackgroundTransparency = 1.000
+    TabContentContainer.BorderColor3 = Color3.fromRGB(0, 0, 0)
+    TabContentContainer.BorderSizePixel = 0
+    TabContentContainer.Position = UDim2.new(0.23, 0, 0.135, 0)
+    TabContentContainer.Size = UDim2.new(0.75, -10, 0, 358)
 
     -- Close button functionality
-    TextButton.MouseButton1Click:Connect(function()
+    CloseButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
 
-    -- Return the window and its components
+    -- Tab creation function
+    local function CreateTab(tabName, tabIcon)
+        local tabButton = Instance.new("Frame")
+        local tabText = Instance.new("TextLabel")
+        local tabIconImage = Instance.new("ImageLabel")
+        local tabContent = Instance.new("Frame")
+        
+        tabButton.Name = tabName
+        tabButton.Parent = TabsContainer
+        tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        tabButton.BackgroundTransparency = 1.000
+        tabButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabButton.BorderSizePixel = 0
+        tabButton.Size = UDim2.new(0, 139, 0, 56)
+        
+        tabText.Parent = tabButton
+        tabText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        tabText.BackgroundTransparency = 1.000
+        tabText.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabText.BorderSizePixel = 0
+        tabText.Position = UDim2.new(0.356, 0, 0.036, 0)
+        tabText.Size = UDim2.new(0, 79, 0, 50)
+        tabText.Font = Enum.Font.GothamBold
+        tabText.Text = tabName
+        tabText.TextColor3 = Color3.fromRGB(230, 230, 230)
+        tabText.TextSize = 12.000
+        tabText.TextXAlignment = Enum.TextXAlignment.Left
+        
+        tabIconImage.Parent = tabButton
+        tabIconImage.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        tabIconImage.BackgroundTransparency = 1.000
+        tabIconImage.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabIconImage.BorderSizePixel = 0
+        tabIconImage.Position = UDim2.new(0.129, 0, 0.321, 0)
+        tabIconImage.Size = UDim2.new(0, 20, 0, 20)
+        tabIconImage.Image = tabIcon or "rbxassetid://10734895856"
+        
+        tabContent.Name = tabName.."Content"
+        tabContent.Parent = TabContentContainer
+        tabContent.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+        tabContent.BackgroundTransparency = 1.000
+        tabContent.BorderColor3 = Color3.fromRGB(0, 0, 0)
+        tabContent.BorderSizePixel = 0
+        tabContent.Size = UDim2.new(1, 0, 1, 0)
+        tabContent.Visible = false
+        
+        -- Make first tab visible by default
+        if #TabsContainer:GetChildren() == 2 then -- 1 for UIListLayout
+            tabContent.Visible = true
+            tabButton.BackgroundTransparency = 0.9
+        end
+        
+        -- Tab button click functionality
+        tabButton.MouseButton1Click:Connect(function()
+            -- Hide all tab contents
+            for _, content in ipairs(TabContentContainer:GetChildren()) do
+                if content:IsA("Frame") then
+                    content.Visible = false
+                end
+            end
+            
+            -- Reset all tab button appearances
+            for _, tab in ipairs(TabsContainer:GetChildren()) do
+                if tab:IsA("Frame") then
+                    tab.BackgroundTransparency = 1.000
+                end
+            end
+            
+            -- Show selected tab content
+            tabContent.Visible = true
+            tabButton.BackgroundTransparency = 0.9
+        end)
+        
+        return {
+            Button = tabButton,
+            Content = tabContent,
+            SetText = function(self, newText)
+                tabText.Text = newText
+            end,
+            SetIcon = function(self, newIcon)
+                tabIconImage.Image = newIcon
+            end
+        }
+    end
+
+    -- Return the window with tab functionality
     return {
         Main = Frame,
         Topbar = Topbar,
-        Title = TextLabel,
-        Subtitle = TextLabel_2,
-        Icon = ImageLabel,
-        CloseButton = TextButton,
+        Title = TitleLabel,
+        Subtitle = SubtitleLabel,
+        Icon = IconImage,
+        CloseButton = CloseButton,
         Destroy = function()
             ScreenGui:Destroy()
         end,
         
+        -- Tab management
+        CreateTab = CreateTab,
+        GetTabContent = function(tabName)
+            return TabContentContainer:FindFirstChild(tabName.."Content")
+        end,
+        
         -- Methods to update properties
         SetTitle = function(self, newTitle)
-            TextLabel.Text = newTitle
+            TitleLabel.Text = newTitle
         end,
         
         SetSubtitle = function(self, newSubtitle)
-            TextLabel_2.Text = newSubtitle
+            SubtitleLabel.Text = newSubtitle
         end,
         
         SetIcon = function(self, newIconId, visible)
             visible = visible == nil and true or visible
-            ImageLabel.Image = newIconId
-            ImageLabel.Visible = visible
+            IconImage.Image = newIconId
+            IconImage.Visible = visible
             
             -- Adjust text positions based on icon visibility
             local newTitleX = visible and 0.08 or 0.022
-            local newSubtitleX = visible and 0.08 or 0.022
-            
-            TextLabel.Position = UDim2.new(newTitleX, 0, TextLabel.Position.Y.Scale, TextLabel.Position.Y.Offset)
-            TextLabel_2.Position = UDim2.new(newSubtitleX, 0, TextLabel_2.Position.Y.Scale, TextLabel_2.Position.Y.Offset)
+            TitleLabel.Position = UDim2.new(newTitleX, 0, TitleLabel.Position.Y.Scale, TitleLabel.Position.Y.Offset)
+            SubtitleLabel.Position = UDim2.new(newTitleX, 0, SubtitleLabel.Position.Y.Scale, SubtitleLabel.Position.Y.Offset)
         end
     }
 end
