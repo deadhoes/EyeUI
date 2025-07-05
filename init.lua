@@ -1,6 +1,6 @@
 -- Eye UI Library
 -- Modern UI Library for Roblox
--- Version: 1.1 (Fixed)
+-- Version: 1.2 (Enhanced)
 
 local EyeUI = {}
 EyeUI.__index = EyeUI
@@ -15,10 +15,25 @@ local RunService = game:GetService("RunService")
 local LocalPlayer = Players.LocalPlayer
 local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 
+-- Lucide Icons (Yeni eklenen ikonlar)
+local LucideIcons = {
+    Home = "rbxassetid://14370478201",
+    Settings = "rbxassetid://14370484732",
+    User = "rbxassetid://14370491001",
+    Bell = "rbxassetid://14370497542",
+    Sliders = "rbxassetid://14370503892",
+    ChevronDown = "rbxassetid://14370510201",
+    X = "rbxassetid://14370516542",
+    Minimize = "rbxassetid://14370522892"
+}
+
 -- Utility Functions
 local function CreateInstance(className, properties)
     local instance = Instance.new(className)
     for property, value in pairs(properties or {}) do
+        if property == "Parent" then
+            value = value.Parent or value
+        end
         instance[property] = value
     end
     return instance
@@ -26,7 +41,7 @@ end
 
 local function Tween(object, properties, duration, easingStyle, easingDirection)
     local tweenInfo = TweenInfo.new(
-        duration or 0.1,
+        duration or 0.3,
         easingStyle or Enum.EasingStyle.Quad,
         easingDirection or Enum.EasingDirection.Out
     )
@@ -43,7 +58,7 @@ function EyeUI:CreateWindow(options)
     -- Default options
     local title = options.Title or "Eye UI"
     local description = options.Description or "UI Library"
-    local icon = options.Icon or "rbxassetid://6523858394"
+    local icon = options.Icon or LucideIcons.Home
     local size = options.Size or UDim2.new(0, 580, 0, 390)
     local position = options.Position or UDim2.new(0.5, -290, 0.5, -195)
     
@@ -63,7 +78,8 @@ function EyeUI:CreateWindow(options)
         BackgroundColor3 = Color3.fromRGB(20, 20, 20),
         BorderSizePixel = 0,
         Position = position,
-        Size = size
+        Size = size,
+        ClipsDescendants = true
     })
     
     local menuCorner = CreateInstance("UICorner", {
@@ -136,14 +152,9 @@ function EyeUI:CreateWindow(options)
     local closeIcon = CreateInstance("ImageLabel", {
         Parent = closeButton,
         BackgroundTransparency = 1,
-        Position = UDim2.new(0.062, 0, 0.276, 0),
+        Position = UDim2.new(0.2, 0, 0.276, 0), -- Düzenlenmiş pozisyon
         Size = UDim2.new(0, 22, 0, 22),
-        Image = "rbxassetid://10747384394"
-    })
-    
-    CreateInstance("UICorner", {
-        CornerRadius = UDim.new(0.02, 8),
-        Parent = closeButton
+        Image = LucideIcons.X
     })
     
     -- Minimize button
@@ -151,7 +162,7 @@ function EyeUI:CreateWindow(options)
         Name = "Minimize",
         Parent = topbar,
         BackgroundTransparency = 1,
-        Position = UDim2.new(0.901, 0, 0, 0),
+        Position = UDim2.new(0.88, 0, 0, 0), -- Düzenlenmiş pozisyon
         Size = UDim2.new(0, 29, 0, 37),
         Text = ""
     })
@@ -159,14 +170,9 @@ function EyeUI:CreateWindow(options)
     local minimizeIcon = CreateInstance("ImageLabel", {
         Parent = minimizeButton,
         BackgroundTransparency = 1,
-        Position = UDim2.new(0.293, 0, 0.249, 0),
+        Position = UDim2.new(0.2, 0, 0.249, 0), -- Düzenlenmiş pozisyon
         Size = UDim2.new(0, 22, 0, 22),
-        Image = "rbxassetid://10734896206"
-    })
-    
-    CreateInstance("UICorner", {
-        CornerRadius = UDim.new(0.02, 8),
-        Parent = minimizeButton
+        Image = LucideIcons.Minimize
     })
     
     -- Tabs container
@@ -180,7 +186,8 @@ function EyeUI:CreateWindow(options)
     
     local tabsLayout = CreateInstance("UIListLayout", {
         Parent = tabsContainer,
-        SortOrder = Enum.SortOrder.LayoutOrder
+        SortOrder = Enum.SortOrder.LayoutOrder,
+        Padding = UDim.new(0, 5)
     })
     
     -- Content frame
@@ -298,7 +305,7 @@ function EyeUI:CreateWindow(options)
         options = options or {}
         
         local tabName = options.Name or "Tab"
-        local tabIcon = options.Icon or "rbxassetid://10734966248"
+        local tabIcon = options.Icon or LucideIcons.Settings
         local isActive = options.Active or false
         
         -- Tab button
@@ -374,9 +381,28 @@ function EyeUI:CreateWindow(options)
             self.CurrentTab = tab
         end
         
-        -- Tab click functionality
+        -- Tab click functionality with animation
         tabClickButton.MouseButton1Click:Connect(function()
-            self:SwitchTab(tabName)
+            if self.CurrentTab ~= tab then
+                -- Animate current tab out
+                if self.CurrentTab then
+                    Tween(self.CurrentTab.Content, {Position = UDim2.new(1, 0, 0, 0)}, 0.2)
+                    wait(0.2)
+                    self.CurrentTab.Content.Visible = false
+                    self.CurrentTab.Content.Position = UDim2.new(0, 0, 0, 0)
+                    self.CurrentTab.Icon.ImageColor3 = Color3.fromRGB(150, 150, 150)
+                    self.CurrentTab.Label.TextColor3 = Color3.fromRGB(150, 150, 150)
+                end
+                
+                -- Animate new tab in
+                tab.Content.Visible = true
+                tab.Content.Position = UDim2.new(-1, 0, 0, 0)
+                Tween(tab.Content, {Position = UDim2.new(0, 0, 0, 0)}, 0.2)
+                tab.Icon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+                tab.Label.TextColor3 = Color3.fromRGB(230, 230, 230)
+                
+                self.CurrentTab = tab
+            end
         end)
         
         -- Tab functions
@@ -476,8 +502,9 @@ function EyeUI:CreateWindow(options)
                 Parent = toggleButton
             })
             
+            -- Yeni: Toggle butonu (sadece buraya tıklanınca değişsin)
             local toggleClickButton = CreateInstance("TextButton", {
-                Parent = toggle,
+                Parent = toggleSwitch,
                 BackgroundTransparency = 1,
                 Size = UDim2.new(1, 0, 1, 0),
                 Text = ""
@@ -520,6 +547,7 @@ function EyeUI:CreateWindow(options)
             local buttonName = options.Name or "Button"
             local buttonDesc = options.Description or "Button description"
             local callback = options.Callback or function() end
+            local buttonIcon = options.Icon or LucideIcons.Bell
             
             local button = CreateInstance("Frame", {
                 Name = "Button",
@@ -565,7 +593,7 @@ function EyeUI:CreateWindow(options)
                 BackgroundTransparency = 1,
                 Position = UDim2.new(0.922, 0, 0.309, 0),
                 Size = UDim2.new(0, 20, 0, 20),
-                Image = "rbxassetid://10734898355"
+                Image = buttonIcon
             })
             
             local buttonClick = CreateInstance("TextButton", {
@@ -660,6 +688,344 @@ function EyeUI:CreateWindow(options)
                 end,
                 GetText = function()
                     return textbox.Text
+                end
+            }
+        end
+        
+        function tab:CreateSlider(options)
+            options = options or {}
+            local sliderName = options.Name or "Slider"
+            local sliderDesc = options.Description or "Slider description"
+            local minValue = options.Min or 0
+            local maxValue = options.Max or 100
+            local defaultValue = options.Default or 50
+            local callback = options.Callback or function() end
+            local precise = options.Precise or false
+            
+            local slider = CreateInstance("Frame", {
+                Name = "Slider",
+                Parent = self.Content,
+                BackgroundColor3 = Color3.fromRGB(26, 26, 26),
+                BorderSizePixel = 0,
+                Size = UDim2.new(1, 0, 0, 53)
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(0.2, 0),
+                Parent = slider
+            })
+            
+            local sliderTitle = CreateInstance("TextLabel", {
+                Name = "Title",
+                Parent = slider,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.049, 0, 0.057, 0),
+                Size = UDim2.new(0, 200, 0, 30),
+                Font = Enum.Font.GothamBold,
+                Text = sliderName,
+                TextColor3 = Color3.fromRGB(230, 230, 230),
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Left
+            })
+            
+            local sliderDesc = CreateInstance("TextLabel", {
+                Name = "Description",
+                Parent = slider,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.049, 0, 0.321, 0),
+                Size = UDim2.new(0, 200, 0, 30),
+                Font = Enum.Font.GothamBold,
+                Text = sliderDesc,
+                TextColor3 = Color3.fromRGB(153, 153, 153),
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Left
+            })
+            
+            local sliderValue = CreateInstance("TextLabel", {
+                Name = "Value",
+                Parent = slider,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.85, 0, 0.3, 0),
+                Size = UDim2.new(0, 50, 0, 20),
+                Font = Enum.Font.GothamBold,
+                Text = tostring(defaultValue),
+                TextColor3 = Color3.fromRGB(230, 230, 230),
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Right
+            })
+            
+            local sliderTrack = CreateInstance("Frame", {
+                Name = "Track",
+                Parent = slider,
+                BackgroundColor3 = Color3.fromRGB(40, 40, 40),
+                BorderSizePixel = 0,
+                Position = UDim2.new(0.4, 0, 0.7, 0),
+                Size = UDim2.new(0.45, 0, 0, 5)
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(1, 0),
+                Parent = sliderTrack
+            })
+            
+            local sliderFill = CreateInstance("Frame", {
+                Name = "Fill",
+                Parent = sliderTrack,
+                BackgroundColor3 = Color3.fromRGB(70, 130, 180),
+                BorderSizePixel = 0,
+                Size = UDim2.new((defaultValue - minValue) / (maxValue - minValue), 0, 1, 0)
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(1, 0),
+                Parent = sliderFill
+            })
+            
+            local sliderButton = CreateInstance("TextButton", {
+                Name = "Button",
+                Parent = sliderTrack,
+                BackgroundTransparency = 1,
+                Size = UDim2.new(1, 0, 3, 0),
+                Position = UDim2.new(0, 0, -1, 0),
+                Text = ""
+            })
+            
+            local sliderThumb = CreateInstance("Frame", {
+                Name = "Thumb",
+                Parent = sliderTrack,
+                BackgroundColor3 = Color3.fromRGB(255, 255, 255),
+                BorderSizePixel = 0,
+                Position = UDim2.new((defaultValue - minValue) / (maxValue - minValue), -5, 0.5, -5),
+                Size = UDim2.new(0, 10, 0, 10),
+                AnchorPoint = Vector2.new(0.5, 0.5)
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(1, 0),
+                Parent = sliderThumb
+            })
+            
+            local dragging = false
+            local currentValue = defaultValue
+            
+            local function updateSlider(value)
+                value = math.clamp(value, minValue, maxValue)
+                currentValue = precise and value or math.floor(value)
+                sliderValue.Text = tostring(currentValue)
+                local ratio = (currentValue - minValue) / (maxValue - minValue)
+                sliderFill.Size = UDim2.new(ratio, 0, 1, 0)
+                sliderThumb.Position = UDim2.new(ratio, -5, 0.5, -5)
+                callback(currentValue)
+            end
+            
+            sliderButton.MouseButton1Down:Connect(function()
+                dragging = true
+            end)
+            
+            UserInputService.InputEnded:Connect(function(input)
+                if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                    dragging = false
+                end
+            end)
+            
+            sliderButton.MouseMoved:Connect(function()
+                if dragging then
+                    local mousePos = UserInputService:GetMouseLocation().X
+                    local absolutePos = sliderTrack.AbsolutePosition.X
+                    local absoluteSize = sliderTrack.AbsoluteSize.X
+                    local relativePos = math.clamp(mousePos - absolutePos, 0, absoluteSize)
+                    local ratio = relativePos / absoluteSize
+                    local value = minValue + (maxValue - minValue) * ratio
+                    updateSlider(value)
+                end
+            end)
+            
+            -- Initialize
+            updateSlider(defaultValue)
+            
+            return {
+                SetValue = function(value)
+                    updateSlider(value)
+                end,
+                GetValue = function()
+                    return currentValue
+                end
+            }
+        end
+        
+        function tab:CreateDropdown(options)
+            options = options or {}
+            local dropdownName = options.Name or "Dropdown"
+            local dropdownDesc = options.Description or "Select an option"
+            local items = options.Items or {"Option 1", "Option 2", "Option 3"}
+            local defaultItem = options.Default or items[1]
+            local callback = options.Callback or function() end
+            
+            local dropdown = CreateInstance("Frame", {
+                Name = "Dropdown",
+                Parent = self.Content,
+                BackgroundColor3 = Color3.fromRGB(26, 26, 26),
+                BorderSizePixel = 0,
+                Size = UDim2.new(1, 0, 0, 53),
+                ClipsDescendants = true
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(0.2, 0),
+                Parent = dropdown
+            })
+            
+            local dropdownTitle = CreateInstance("TextLabel", {
+                Name = "Title",
+                Parent = dropdown,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.049, 0, 0.057, 0),
+                Size = UDim2.new(0, 200, 0, 30),
+                Font = Enum.Font.GothamBold,
+                Text = dropdownName,
+                TextColor3 = Color3.fromRGB(230, 230, 230),
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Left
+            })
+            
+            local dropdownDesc = CreateInstance("TextLabel", {
+                Name = "Description",
+                Parent = dropdown,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.049, 0, 0.321, 0),
+                Size = UDim2.new(0, 200, 0, 30),
+                Font = Enum.Font.GothamBold,
+                Text = dropdownDesc,
+                TextColor3 = Color3.fromRGB(153, 153, 153),
+                TextSize = 14,
+                TextXAlignment = Enum.TextXAlignment.Left
+            })
+            
+            local dropdownButton = CreateInstance("TextButton", {
+                Name = "Button",
+                Parent = dropdown,
+                BackgroundColor3 = Color3.fromRGB(15, 15, 15),
+                BorderSizePixel = 0,
+                Position = UDim2.new(0.673, 0, 0.17, 0),
+                Size = UDim2.new(0, 122, 0, 34),
+                Text = defaultItem,
+                Font = Enum.Font.GothamBold,
+                TextColor3 = Color3.fromRGB(230, 230, 230),
+                TextSize = 14
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(0.2, 0),
+                Parent = dropdownButton
+            })
+            
+            local dropdownIcon = CreateInstance("ImageLabel", {
+                Parent = dropdownButton,
+                BackgroundTransparency = 1,
+                Position = UDim2.new(0.8, 0, 0.2, 0),
+                Size = UDim2.new(0, 20, 0, 20),
+                Image = LucideIcons.ChevronDown,
+                ImageColor3 = Color3.fromRGB(200, 200, 200)
+            })
+            
+            local dropdownList = CreateInstance("Frame", {
+                Name = "List",
+                Parent = dropdown,
+                BackgroundColor3 = Color3.fromRGB(26, 26, 26),
+                BorderSizePixel = 0,
+                Position = UDim2.new(0, 0, 1, 5),
+                Size = UDim2.new(1, 0, 0, 0),
+                Visible = false,
+                ClipsDescendants = true
+            })
+            
+            CreateInstance("UICorner", {
+                CornerRadius = UDim.new(0.2, 0),
+                Parent = dropdownList
+            })
+            
+            local dropdownListLayout = CreateInstance("UIListLayout", {
+                Parent = dropdownList,
+                SortOrder = Enum.SortOrder.LayoutOrder
+            })
+            
+            local dropdownListPadding = CreateInstance("UIPadding", {
+                Parent = dropdownList,
+                PaddingTop = UDim.new(0, 5)
+            })
+            
+            local function updateDropdownSize()
+                dropdownList.Size = UDim2.new(1, 0, 0, #items * 30 + 10)
+            end
+            
+            local function createDropdownItems()
+                -- Clear existing items
+                for _, child in ipairs(dropdownList:GetChildren()) do
+                    if child:IsA("TextButton") then
+                        child:Destroy()
+                    end
+                end
+                
+                -- Create new items
+                for i, item in ipairs(items) do
+                    local itemButton = CreateInstance("TextButton", {
+                        Name = item,
+                        Parent = dropdownList,
+                        BackgroundColor3 = Color3.fromRGB(35, 35, 35),
+                        BorderSizePixel = 0,
+                        Size = UDim2.new(1, -10, 0, 30),
+                        Position = UDim2.new(0, 5, 0, (i-1)*30 + 5),
+                        Text = item,
+                        Font = Enum.Font.GothamBold,
+                        TextColor3 = Color3.fromRGB(230, 230, 230),
+                        TextSize = 14
+                    })
+                    
+                    CreateInstance("UICorner", {
+                        CornerRadius = UDim.new(0.1, 0),
+                        Parent = itemButton
+                    })
+                    
+                    itemButton.MouseButton1Click:Connect(function()
+                        dropdownButton.Text = item
+                        callback(item)
+                        dropdownList.Visible = false
+                        Tween(dropdown, {Size = UDim2.new(1, 0, 0, 53)}, 0.2)
+                    end)
+                end
+                
+                updateDropdownSize()
+            end
+            
+            local isOpen = false
+            dropdownButton.MouseButton1Click:Connect(function()
+                isOpen = not isOpen
+                dropdownList.Visible = isOpen
+                
+                if isOpen then
+                    createDropdownItems()
+                    Tween(dropdown, {Size = UDim2.new(1, 0, 0, 53 + dropdownList.Size.Y.Offset + 5)}, 0.2)
+                else
+                    Tween(dropdown, {Size = UDim2.new(1, 0, 0, 53)}, 0.2)
+                end
+            end)
+            
+            -- Initialize
+            createDropdownItems()
+            
+            return {
+                SetItems = function(newItems)
+                    items = newItems
+                    createDropdownItems()
+                end,
+                GetSelected = function()
+                    return dropdownButton.Text
+                end,
+                SetSelected = function(item)
+                    if table.find(items, item) then
+                        dropdownButton.Text = item
+                        callback(item)
+                    end
                 end
             }
         end
