@@ -306,30 +306,62 @@ function EyeUI:CreateWindow(title, subtitle)
         return tab
     end
     
-    function window:Notify(title, message, duration)
+    function window:Notify(title, message, duration, notifType)
         duration = duration or 5
+        notifType = notifType or "Info"
+        
+        -- Notification colors
+        local colors = {
+            Info = Color3.fromRGB(47, 128, 237),
+            Success = Color3.fromRGB(39, 174, 96),
+            Warning = Color3.fromRGB(241, 196, 15),
+            Error = Color3.fromRGB(231, 76, 60)
+        }
         
         local Notification = Instance.new("Frame")
         local UICorner = Instance.new("UICorner")
         local Title = Instance.new("TextLabel")
         local Message = Instance.new("TextLabel")
         local CloseButton = Instance.new("TextButton")
+        local CloseIcon = Instance.new("ImageLabel")
+        local NotifIcon = Instance.new("ImageLabel")
+        local TimeoutBar = Instance.new("Frame")
+        local UICorner_3 = Instance.new("UICorner")
         
         Notification.Name = "Notification"
         Notification.Parent = NotificationHolder
         Notification.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
         Notification.BorderSizePixel = 0
-        Notification.Position = UDim2.new(1, -250, 1, -100)
-        Notification.Size = UDim2.new(0, 240, 0, 80)
+        Notification.Position = UDim2.new(1, 10, 1, -100)
+        Notification.Size = UDim2.new(0, 300, 0, 80)
+        Notification.ZIndex = 10
         
         UICorner.CornerRadius = UDim.new(0.1, 0)
         UICorner.Parent = Notification
         
+        -- Left accent bar
+        local AccentBar = Instance.new("Frame")
+        AccentBar.Name = "AccentBar"
+        AccentBar.Parent = Notification
+        AccentBar.BackgroundColor3 = colors[notifType] or colors.Info
+        AccentBar.BorderSizePixel = 0
+        AccentBar.Position = UDim2.new(0, 0, 0, 0)
+        AccentBar.Size = UDim2.new(0, 5, 1, 0)
+        
+        -- Notification icon
+        NotifIcon.Name = "NotifIcon"
+        NotifIcon.Parent = Notification
+        NotifIcon.BackgroundTransparency = 1
+        NotifIcon.Position = UDim2.new(0.05, 0, 0.2, 0)
+        NotifIcon.Size = UDim2.new(0, 25, 0, 25)
+        NotifIcon.Image = "rbxassetid://10747364761"
+        NotifIcon.ImageColor3 = colors[notifType] or colors.Info
+        
         Title.Name = "Title"
         Title.Parent = Notification
         Title.BackgroundTransparency = 1
-        Title.Position = UDim2.new(0.05, 0, 0.1, 0)
-        Title.Size = UDim2.new(0.9, 0, 0.3, 0)
+        Title.Position = UDim2.new(0.2, 0, 0.1, 0)
+        Title.Size = UDim2.new(0.7, 0, 0.3, 0)
         Title.Font = Enum.Font.GothamBold
         Title.Text = title or "Notification"
         Title.TextColor3 = Color3.fromRGB(230, 230, 230)
@@ -339,35 +371,58 @@ function EyeUI:CreateWindow(title, subtitle)
         Message.Name = "Message"
         Message.Parent = Notification
         Message.BackgroundTransparency = 1
-        Message.Position = UDim2.new(0.05, 0, 0.4, 0)
-        Message.Size = UDim2.new(0.9, 0, 0.5, 0)
+        Message.Position = UDim2.new(0.2, 0, 0.4, 0)
+        Message.Size = UDim2.new(0.7, 0, 0.5, 0)
         Message.Font = Enum.Font.Gotham
-        Message.Text = message or "Message"
+        Message.Text = message or "Message content here"
         Message.TextColor3 = Color3.fromRGB(200, 200, 200)
         Message.TextSize = 12
         Message.TextWrapped = true
         Message.TextXAlignment = Enum.TextXAlignment.Left
         Message.TextYAlignment = Enum.TextYAlignment.Top
         
+        -- Close button with icon
         CloseButton.Name = "CloseButton"
         CloseButton.Parent = Notification
         CloseButton.BackgroundTransparency = 1
         CloseButton.Position = UDim2.new(0.9, 0, 0.1, 0)
         CloseButton.Size = UDim2.new(0, 20, 0, 20)
-        CloseButton.Font = Enum.Font.SourceSans
-        CloseButton.Text = "X"
-        CloseButton.TextColor3 = Color3.fromRGB(200, 200, 200)
-        CloseButton.TextSize = 14
+        CloseButton.ZIndex = 11
+        CloseButton.Text = ""
+        
+        CloseIcon.Name = "CloseIcon"
+        CloseIcon.Parent = CloseButton
+        CloseIcon.BackgroundTransparency = 1
+        CloseIcon.Size = UDim2.new(1, 0, 1, 0)
+        CloseIcon.Image = "rbxassetid://10747384394"
+        CloseIcon.ImageColor3 = Color3.fromRGB(150, 150, 150)
+        
+        -- Timeout bar
+        TimeoutBar.Name = "TimeoutBar"
+        TimeoutBar.Parent = Notification
+        TimeoutBar.BackgroundColor3 = colors[notifType] or colors.Info
+        TimeoutBar.BorderSizePixel = 0
+        TimeoutBar.Position = UDim2.new(0, 5, 1, -3)
+        TimeoutBar.Size = UDim2.new(1, -5, 0, 3)
+        
+        UICorner_3.CornerRadius = UDim.new(0, 2)
+        UICorner_3.Parent = TimeoutBar
+        
+        -- Animate in
+        Notification:TweenPosition(UDim2.new(1, -310, 1, -100), "Out", "Quad", 0.3, true)
+        
+        -- Animate timeout bar
+        TimeoutBar:TweenSize(UDim2.new(0, 0, 0, 3), "Out", "Linear", duration, true)
         
         CloseButton.MouseButton1Click:Connect(function()
-            Notification:TweenPosition(UDim2.new(1, -250, 1, 100), "Out", "Quad", 0.2, true, function()
+            Notification:TweenPosition(UDim2.new(1, 10, 1, -100), "Out", "Quad", 0.3, true, function()
                 Notification:Destroy()
             end)
         end)
         
         task.delay(duration, function()
-            if Notification then
-                Notification:TweenPosition(UDim2.new(1, -250, 1, 100), "Out", "Quad", 0.2, true, function()
+            if Notification and Notification.Parent then
+                Notification:TweenPosition(UDim2.new(1, 10, 1, -100), "Out", "Quad", 0.3, true, function()
                     Notification:Destroy()
                 end)
             end
