@@ -1,211 +1,182 @@
 local EyeUI = {}
 
-function EyeUI:CreateWindow(config)
-    -- Default configuration
-    local defaultConfig = {
-        title = "EyeUI",
-        subtitle = "subtitle",
-        icon = "rbxassetid://10747364761",
-        closeIcon = "rbxassetid://10747384394",
-        tabIcon = "rbxassetid://10734895856",
-        size = UDim2.new(0, 511, 0, 337),
-        position = UDim2.new(0.007, 0, 0.224, 0),
-        accentColor = Color3.fromRGB(0, 120, 215)
-    }
-    
-    -- Merge user config with defaults
-    config = setmetatable(config or {}, {__index = defaultConfig})
-
-    -- Create main UI elements
+function EyeUI:CreateWindow(title, subtitle, image)
     local ScreenGui = Instance.new("ScreenGui")
-    local MainFrame = Instance.new("Frame")
-    local TopBar = Instance.new("Frame")
-    local TabContainer = Instance.new("Frame")
-    local ContentContainer = Instance.new("Frame")
-    
-    -- Setup ScreenGui
-    ScreenGui.Name = "EyeUI"
-    ScreenGui.Parent = game:GetService("CoreGui") or game.Players.LocalPlayer:WaitForChild("PlayerGui")
-    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-
-    -- Main Window Frame
-    MainFrame.Parent = ScreenGui
-    MainFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    MainFrame.BorderSizePixel = 0
-    MainFrame.Position = config.position
-    MainFrame.Size = config.size
-    MainFrame.Active = true
-    MainFrame.Draggable = true
-
-    -- Add rounded corners
-    local corner = Instance.new("UICorner")
-    corner.CornerRadius = UDim.new(0.02, 8)
-    corner.Parent = MainFrame
-
-    -- Top Bar
-    TopBar.Name = "TopBar"
-    TopBar.Parent = MainFrame
-    TopBar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-    TopBar.BorderSizePixel = 0
-    TopBar.Size = UDim2.new(1, 0, 0, 50)
-
-    -- Title
+    local Frame = Instance.new("Frame")
+    local UICorner = Instance.new("UICorner")
+    local Topbar = Instance.new("Frame")
+    local UICorner_2 = Instance.new("UICorner")
     local TitleLabel = Instance.new("TextLabel")
-    TitleLabel.Parent = TopBar
+    local SubtitleLabel = Instance.new("TextLabel")
+    local Icon = Instance.new("ImageLabel")
+    local CloseButton = Instance.new("TextButton")
+    local CloseIcon = Instance.new("ImageLabel")
+    local TabsHolder = Instance.new("Frame")
+    local UIListLayout = Instance.new("UIListLayout")
+    
+    ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+    ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    
+    Frame.Parent = ScreenGui
+    Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Frame.BorderSizePixel = 0
+    Frame.Position = UDim2.new(0.007, 0, 0.223, 0)
+    Frame.Size = UDim2.new(0, 511, 0, 337)
+    
+    UICorner.CornerRadius = UDim.new(0.02, 8)
+    UICorner.Parent = Frame
+    
+    -- Topbar
+    Topbar.Name = "Topbar"
+    Topbar.Parent = Frame
+    Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+    Topbar.BorderSizePixel = 0
+    Topbar.Size = UDim2.new(0, 511, 0, 50)
+    
+    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.Parent = Topbar
+    
+    TitleLabel.Parent = Topbar
     TitleLabel.BackgroundTransparency = 1
-    TitleLabel.Position = UDim2.new(0.092, 0, -0.14, 0)
+    TitleLabel.Position = UDim2.new(0.091, 0, -0.14, 0)
     TitleLabel.Size = UDim2.new(0, 416, 0, 50)
     TitleLabel.Font = Enum.Font.GothamBold
-    TitleLabel.Text = config.title
+    TitleLabel.Text = title or "EyeUI"
     TitleLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
     TitleLabel.TextSize = 14
     TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-    -- Subtitle
-    local SubtitleLabel = Instance.new("TextLabel")
-    SubtitleLabel.Parent = TopBar
+    
+    SubtitleLabel.Parent = Topbar
     SubtitleLabel.BackgroundTransparency = 1
-    SubtitleLabel.Position = UDim2.new(0.092, 0, 0.12, 0)
+    SubtitleLabel.Position = UDim2.new(0.091, 0, 0.12, 0)
     SubtitleLabel.Size = UDim2.new(0, 416, 0, 50)
     SubtitleLabel.Font = Enum.Font.GothamBold
-    SubtitleLabel.Text = config.subtitle
+    SubtitleLabel.Text = subtitle or "UI Library"
     SubtitleLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
     SubtitleLabel.TextSize = 12
     SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
-
-    -- Icon
-    local IconImage = Instance.new("ImageLabel")
-    IconImage.Parent = TopBar
-    IconImage.BackgroundTransparency = 1
-    IconImage.Position = UDim2.new(0.022, 0, 0.22, 0)
-    IconImage.Size = UDim2.new(0, 25, 0, 25)
-    IconImage.Image = config.icon
-
+    
+    Icon.Parent = Topbar
+    Icon.BackgroundTransparency = 1
+    Icon.Position = UDim2.new(0.022, 0, 0.22, 0)
+    Icon.Size = UDim2.new(0, 25, 0, 25)
+    Icon.Image = image
+    
     -- Close Button
-    local CloseButton = Instance.new("TextButton")
-    CloseButton.Parent = TopBar
+    CloseButton.Parent = Topbar
     CloseButton.BackgroundTransparency = 1
     CloseButton.Position = UDim2.new(0.929, 0, 0, 0)
     CloseButton.Size = UDim2.new(0, 36, 0, 50)
+    CloseButton.Font = Enum.Font.SourceSans
     CloseButton.Text = ""
-
-    local CloseIcon = Instance.new("ImageLabel")
+    
     CloseIcon.Parent = CloseButton
     CloseIcon.BackgroundTransparency = 1
     CloseIcon.Position = UDim2.new(0.135, 0, 0.263, 0)
     CloseIcon.Size = UDim2.new(0, 23, 0, 23)
-    CloseIcon.Image = config.closeIcon
-
+    CloseIcon.Image = "rbxassetid://10747384394"
+    
+    -- Tabs Holder
+    TabsHolder.Name = "Tabs"
+    TabsHolder.Parent = Frame
+    TabsHolder.BackgroundTransparency = 1
+    TabsHolder.Position = UDim2.new(0, 0, 0.135, 0)
+    TabsHolder.Size = UDim2.new(0, 139, 0, 358)
+    
+    UIListLayout.Parent = TabsHolder
+    UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    
+    -- Close button functionality
     CloseButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
-
-    -- Tab System
-    TabContainer.Name = "Tabs"
-    TabContainer.Parent = MainFrame
-    TabContainer.BackgroundTransparency = 1
-    TabContainer.Position = UDim2.new(0, 0, 0.135, 0)
-    TabContainer.Size = UDim2.new(0, 139, 0, 287)
-
-    local TabListLayout = Instance.new("UIListLayout")
-    TabListLayout.Parent = TabContainer
-    TabListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabListLayout.Padding = UDim.new(0, 5)
-
-    ContentContainer.Name = "Content"
-    ContentContainer.Parent = MainFrame
-    ContentContainer.BackgroundTransparency = 1
-    ContentContainer.Position = UDim2.new(0, 139, 0.135, 0)
-    ContentContainer.Size = UDim2.new(1, -139, 0, 287)
-
-    -- Tab management
-    local tabs = {}
-    local currentTab = nil
-
-    local function CreateTab(tabName)
-        local tabButton = Instance.new("Frame")
-        local tabText = Instance.new("TextLabel")
-        local tabIcon = Instance.new("ImageLabel")
-        local tabContent = Instance.new("Frame")
-        
-        -- Tab Button
-        tabButton.Name = tabName
-        tabButton.Parent = TabContainer
-        tabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-        tabButton.BackgroundTransparency = 0.9
-        tabButton.Size = UDim2.new(1, 0, 0, 29)
-        
-        -- Tab Icon
-        tabIcon.Parent = tabButton
-        tabIcon.BackgroundTransparency = 1
-        tabIcon.Position = UDim2.new(0.115, 0, 0.135, 0)
-        tabIcon.Size = UDim2.new(0, 20, 0, 20)
-        tabIcon.Image = config.tabIcon
-        
-        -- Tab Text
-        tabText.Parent = tabButton
-        tabText.BackgroundTransparency = 1
-        tabText.Position = UDim2.new(0.334, 0, 0.239, 0)
-        tabText.Size = UDim2.new(0, 79, 0, 14)
-        tabText.Font = Enum.Font.GothamBold
-        tabText.Text = tabName
-        tabText.TextColor3 = Color3.fromRGB(230, 230, 230)
-        tabText.TextSize = 12
-        tabText.TextXAlignment = Enum.TextXAlignment.Left
-        
-        -- Tab Content
-        tabContent.Name = tabName.."Content"
-        tabContent.Parent = ContentContainer
-        tabContent.BackgroundTransparency = 1
-        tabContent.Size = UDim2.new(1, 0, 1, 0)
-        tabContent.Visible = false
-        
-        -- Tab selection
-        tabButton.MouseButton1Click:Connect(function()
-            if currentTab then
-                currentTab.button.BackgroundTransparency = 0.9
-                currentTab.content.Visible = false
-            end
+    
+    -- Dragging functionality
+    local UserInputService = game:GetService("UserInputService")
+    local dragging
+    local dragInput
+    local dragStart
+    local startPos
+    
+    local function update(input)
+        local delta = input.Position - dragStart
+        Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+    end
+    
+    Topbar.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
             
-            tabButton.BackgroundTransparency = 0.8
-            tabContent.Visible = true
-            
-            currentTab = {
-                button = tabButton,
-                content = tabContent
-            }
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then
+                    dragging = false
+                end
+            end)
+        end
+    end)
+    
+    Topbar.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+    
+    UserInputService.InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            update(input)
+        end
+    end)
+    
+    -- Window methods
+    local window = {}
+    
+    function window:AddTab(name, icon)
+        local Tab = Instance.new("Frame")
+        local TabLabel = Instance.new("TextLabel")
+        local TabIcon = Instance.new("ImageLabel")
+        
+        Tab.Name = name or "Tab"
+        Tab.Parent = TabsHolder
+        Tab.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        Tab.BackgroundTransparency = 1
+        Tab.BorderSizePixel = 0
+        Tab.Size = UDim2.new(0, 139, 0, 29)
+        
+        TabLabel.Parent = Tab
+        TabLabel.BackgroundTransparency = 1
+        TabLabel.Position = UDim2.new(0.334, 0, 0.239, 0)
+        TabLabel.Size = UDim2.new(0, 79, 0, 14)
+        TabLabel.Font = Enum.Font.GothamBold
+        TabLabel.Text = name or "Tab"
+        TabLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
+        TabLabel.TextSize = 12
+        TabLabel.TextXAlignment = Enum.TextXAlignment.Left
+        
+        TabIcon.Parent = Tab
+        TabIcon.BackgroundTransparency = 1
+        TabIcon.Position = UDim2.new(0.115, 0, 0.135, 0)
+        TabIcon.Size = UDim2.new(0, 20, 0, 20)
+        TabIcon.Image = icon or "rbxassetid://10734895856"
+        
+        -- Return tab object
+        local tab = {}
+        
+        function tab:Show()
+            -- You can add content display logic here
+            print("Showing tab:", name)
+        end
+        
+        -- Connect click event
+        Tab.MouseButton1Click:Connect(function()
+            tab:Show()
         end)
         
-        -- Select first tab
-        if #tabs == 0 then
-            tabButton.BackgroundTransparency = 0.8
-            tabContent.Visible = true
-            currentTab = {
-                button = tabButton,
-                content = tabContent
-            }
-        end
-        
-        local tabAPI = {
-            Content = tabContent,
-            Button = tabButton,
-            AddElement = function(self, element)
-                element.Parent = tabContent
-                return element
-            end
-        }
-        
-        table.insert(tabs, tabAPI)
-        return tabAPI
+        return tab
     end
-
-    return {
-        Main = MainFrame,
-        CreateTab = CreateTab,
-        Destroy = function()
-            ScreenGui:Destroy()
-        end
-    }
+    
+    return window
 end
 
 return EyeUI
