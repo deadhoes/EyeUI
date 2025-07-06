@@ -6,8 +6,6 @@ function EyeUI:CreateWindow(title, description)
     local UICorner = Instance.new("UICorner")
     local Tabs = Instance.new("Frame")
     local UIListLayout = Instance.new("UIListLayout")
-    local Folder = Instance.new("Folder")
-    local Frame = Instance.new("Frame")
     local UIAspectRatioConstraint = Instance.new("UIAspectRatioConstraint")
     local ScrollingFrame = Instance.new("ScrollingFrame")
     local UIPadding = Instance.new("UIPadding")
@@ -52,14 +50,19 @@ function EyeUI:CreateWindow(title, description)
     UIListLayout.Parent = Tabs
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-    Folder.Parent = Tabs
-
-    Frame.Parent = Folder
-    Frame.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
-    Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-    Frame.BorderSizePixel = 0
-    Frame.Position = UDim2.new(0.063, 0, 0.021, 0)
-    Frame.Size = UDim2.new(0, 3, 0, 33)
+    
+    local TabIndicator = Instance.new("Frame")
+    TabIndicator.Name = "TabIndicator"
+    TabIndicator.Parent = Tabs
+    TabIndicator.BackgroundColor3 = Color3.fromRGB(85, 170, 255)
+    TabIndicator.BorderSizePixel = 0
+    TabIndicator.Size = UDim2.new(0, 4, 0, 48)
+    TabIndicator.Position = UDim2.new(0, 2, 0, 0)
+    TabIndicator.ZIndex = 2
+    
+    local TabIndicatorCorner = Instance.new("UICorner")
+    TabIndicatorCorner.CornerRadius = UDim.new(0, 2)
+    TabIndicatorCorner.Parent = TabIndicator
 
     UIAspectRatioConstraint.Parent = Menu
     UIAspectRatioConstraint.AspectRatio = 1.487
@@ -72,7 +75,8 @@ function EyeUI:CreateWindow(title, description)
     ScrollingFrame.BorderSizePixel = 0
     ScrollingFrame.Position = UDim2.new(0.232, 0, 0.131, 0)
     ScrollingFrame.Size = UDim2.new(0, 444, 0, 338)
-    ScrollingFrame.ScrollBarThickness = 7
+    ScrollingFrame.ScrollBarThickness = 4
+    ScrollingFrame.CanvasSize = UDim2.new(0, 0, 0, 1000)
 
     UIPadding.Parent = ScrollingFrame
     UIPadding.PaddingBottom = UDim.new(0, 10)
@@ -83,6 +87,7 @@ function EyeUI:CreateWindow(title, description)
     UIListLayout_2.Parent = ScrollingFrame
     UIListLayout_2.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout_2.Padding = UDim.new(0, 7)
+    UIListLayout_2.FillDirection = Enum.FillDirection.Vertical
 
     Drag.Name = "Drag"
     Drag.Parent = Menu
@@ -192,7 +197,7 @@ function EyeUI:CreateWindow(title, description)
     Description_5.TextSize = 12.000
     Description_5.TextXAlignment = Enum.TextXAlignment.Left
 
-    -- Drag functionality
+    
     local UIS = game:GetService("UserInputService")
     local dragging = false
     local dragInput, dragStart, startPos
@@ -203,7 +208,7 @@ function EyeUI:CreateWindow(title, description)
             startPos.Y.Scale, startPos.Y.Offset + delta.Y)
     end
 
-    Drag.InputBegan:Connect(function(input)
+    Topbar.InputBegan:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
@@ -217,7 +222,7 @@ function EyeUI:CreateWindow(title, description)
         end
     end)
 
-    Drag.InputChanged:Connect(function(input)
+    Topbar.InputChanged:Connect(function(input)
         if input.UserInputType == Enum.UserInputType.MouseMovement then
             dragInput = input
         end
@@ -229,12 +234,12 @@ function EyeUI:CreateWindow(title, description)
         end
     end)
 
-    -- Close button functionality
+    
     Close.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
 
-    -- Minimize button functionality
+    
     local isMinimized = false
     Minimize.MouseButton1Click:Connect(function()
         if isMinimized then
@@ -249,13 +254,16 @@ function EyeUI:CreateWindow(title, description)
         isMinimized = not isMinimized
     end)
 
-    -- Create tab functions
+    
     local tabFunctions = {}
+    local allTabs = {}
+    local currentActiveTab = nil
 
     function tabFunctions:CreateTab(name, icon)
         local Tab = Instance.new("Frame")
         local ImageLabel = Instance.new("ImageLabel")
         local TextLabel = Instance.new("TextLabel")
+        local TabButton = Instance.new("TextButton")
 
         Tab.Name = name
         Tab.Parent = Tabs
@@ -265,13 +273,22 @@ function EyeUI:CreateWindow(title, description)
         Tab.BorderSizePixel = 0
         Tab.Size = UDim2.new(0, 127, 0, 48)
 
+        TabButton.Name = "TabButton"
+        TabButton.Parent = Tab
+        TabButton.BackgroundTransparency = 1.000
+        TabButton.Size = UDim2.new(1, 0, 1, 0)
+        TabButton.Text = ""
+        TabButton.Font = Enum.Font.SourceSans
+        TabButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+        TabButton.TextSize = 14.000
+
         ImageLabel.Parent = Tab
         ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
         ImageLabel.BackgroundTransparency = 1.000
         ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
         ImageLabel.BorderSizePixel = 0
-        ImageLabel.Position = UDim2.new(0.144, 0, 0.222, 0)
-        ImageLabel.Size = UDim2.new(0, 25, 0, 25)
+        ImageLabel.Position = UDim2.new(0, 16, 0.5, -12)
+        ImageLabel.Size = UDim2.new(0, 24, 0, 24)
         ImageLabel.Image = icon or "rbxassetid://10734966248"
         ImageLabel.ImageColor3 = Color3.fromRGB(150, 150, 150)
 
@@ -280,36 +297,65 @@ function EyeUI:CreateWindow(title, description)
         TextLabel.BackgroundTransparency = 1.000
         TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
         TextLabel.BorderSizePixel = 0
-        TextLabel.Position = UDim2.new(0.413, 0, 0.042, 0)
-        TextLabel.Size = UDim2.new(0, 82, 0, 44)
+        TextLabel.Position = UDim2.new(0, 48, 0, 0)
+        TextLabel.Size = UDim2.new(1, -56, 1, 0)
         TextLabel.Font = Enum.Font.GothamBold
         TextLabel.Text = name
         TextLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
         TextLabel.TextSize = 14.000
         TextLabel.TextXAlignment = Enum.TextXAlignment.Left
+        TextLabel.TextYAlignment = Enum.TextYAlignment.Center
 
-        -- Highlight first tab by default
-        if #Tabs:GetChildren() == 3 then -- First tab (after UIListLayout and Folder)
-            ImageLabel.ImageColor3 = Color3.fromRGB(230, 230, 230)
-            TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-        end
+        
+        local TabContentFrame = Instance.new("Frame")
+        TabContentFrame.Name = name .. "_Content"
+        TabContentFrame.Parent = ScrollingFrame
+        TabContentFrame.BackgroundTransparency = 1
+        TabContentFrame.Size = UDim2.new(1, 0, 0, 0)
+        TabContentFrame.AutomaticSize = Enum.AutomaticSize.Y
+        
+        local TabContentLayout = Instance.new("UIListLayout")
+        TabContentLayout.Parent = TabContentFrame
+        TabContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        TabContentLayout.Padding = UDim.new(0, 7)
 
-        -- Tab switching functionality
-        Tab.MouseButton1Click:Connect(function()
-            for _, child in ipairs(Tabs:GetChildren()) do
-                if child:IsA("Frame") and child ~= Tab then
-                    local img = child:FindFirstChildOfClass("ImageLabel")
-                    local txt = child:FindFirstChildOfClass("TextLabel")
-                    if img and txt then
-                        img.ImageColor3 = Color3.fromRGB(150, 150, 150)
-                        txt.TextColor3 = Color3.fromRGB(150, 150, 150)
-                    end
-                end
+        
+        local tabInfo = {
+            tab = Tab,
+            imageLabel = ImageLabel,
+            textLabel = TextLabel,
+            contentFrame = TabContentFrame,
+            contentLayout = TabContentLayout,
+            name = name
+        }
+        table.insert(allTabs, tabInfo)
+
+        
+        local function selectTab()
+            
+            for _, tabData in ipairs(allTabs) do
+                tabData.contentFrame.Visible = false
+                tabData.imageLabel.ImageColor3 = Color3.fromRGB(150, 150, 150)
+                tabData.textLabel.TextColor3 = Color3.fromRGB(150, 150, 150)
             end
             
-            ImageLabel.ImageColor3 = Color3.fromRGB(230, 230, 230)
+            
+            TabContentFrame.Visible = true
+            ImageLabel.ImageColor3 = Color3.fromRGB(85, 170, 255)
             TextLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-        end)
+            currentActiveTab = tabInfo
+            
+            
+            local tabPosition = Tab.AbsolutePosition.Y - Tabs.AbsolutePosition.Y
+            TabIndicator.Position = UDim2.new(0, 2, 0, tabPosition)
+        end
+
+        TabButton.MouseButton1Click:Connect(selectTab)
+
+        
+        if #allTabs == 1 then
+            selectTab()
+        end
 
         local tabContent = {}
 
@@ -317,12 +363,12 @@ function EyeUI:CreateWindow(title, description)
             local Title = Instance.new("TextLabel")
             
             Title.Name = "Title"
-            Title.Parent = ScrollingFrame
+            Title.Parent = TabContentFrame
             Title.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
             Title.BackgroundTransparency = 1.000
             Title.BorderColor3 = Color3.fromRGB(0, 0, 0)
             Title.BorderSizePixel = 0
-            Title.Size = UDim2.new(0, 419, 0, 25)
+            Title.Size = UDim2.new(1, 0, 0, 25)
             Title.Font = Enum.Font.GothamBold
             Title.Text = title or "Section"
             Title.TextColor3 = Color3.fromRGB(230, 230, 230)
@@ -342,11 +388,11 @@ function EyeUI:CreateWindow(title, description)
                 local Interact = Instance.new("TextButton")
                 
                 Toggle.Name = "Toggle"
-                Toggle.Parent = ScrollingFrame
+                Toggle.Parent = TabContentFrame
                 Toggle.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
                 Toggle.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Toggle.BorderSizePixel = 0
-                Toggle.Size = UDim2.new(0, 420, 0, 53)
+                Toggle.Size = UDim2.new(1, 0, 0, 53)
                 
                 UICorner_2.CornerRadius = UDim.new(0.2, 0)
                 UICorner_2.Parent = Toggle
@@ -364,6 +410,7 @@ function EyeUI:CreateWindow(title, description)
                 Title_2.TextColor3 = Color3.fromRGB(230, 230, 230)
                 Title_2.TextSize = 14.000
                 Title_2.TextXAlignment = Enum.TextXAlignment.Left
+                Title_2.TextYAlignment = Enum.TextYAlignment.Center
                 
                 ToggleSwitch.Name = "ToggleSwitch"
                 ToggleSwitch.Parent = Toggle
@@ -400,6 +447,7 @@ function EyeUI:CreateWindow(title, description)
                 Description.TextColor3 = Color3.fromRGB(153, 153, 153)
                 Description.TextSize = 14.000
                 Description.TextXAlignment = Enum.TextXAlignment.Left
+                Description.TextYAlignment = Enum.TextYAlignment.Center
                 
                 Interact.Name = "Interact"
                 Interact.Parent = Toggle
@@ -457,11 +505,11 @@ function EyeUI:CreateWindow(title, description)
                 local Interact = Instance.new("TextButton")
                 
                 Button.Name = "Button"
-                Button.Parent = ScrollingFrame
+                Button.Parent = TabContentFrame
                 Button.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
                 Button.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Button.BorderSizePixel = 0
-                Button.Size = UDim2.new(0, 420, 0, 53)
+                Button.Size = UDim2.new(1, 0, 0, 53)
                 
                 UICorner_12.CornerRadius = UDim.new(0.2, 0)
                 UICorner_12.Parent = Button
@@ -540,11 +588,11 @@ function EyeUI:CreateWindow(title, description)
                 local UICorner_9 = Instance.new("UICorner")
                 
                 Slider.Name = "Slider"
-                Slider.Parent = ScrollingFrame
+                Slider.Parent = TabContentFrame
                 Slider.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
                 Slider.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Slider.BorderSizePixel = 0
-                Slider.Size = UDim2.new(0, 420, 0, 44)
+                Slider.Size = UDim2.new(1, 0, 0, 44)
                 
                 UICorner_5.CornerRadius = UDim.new(0.2, 0)
                 UICorner_5.Parent = Slider
@@ -696,12 +744,13 @@ function EyeUI:CreateWindow(title, description)
                 local Description_2 = Instance.new("TextLabel")
                 local TextBox_2 = Instance.new("TextBox")
                 local UICorner_11 = Instance.new("UICorner")
-                                Input.Name = "Input"
-                Input.Parent = ScrollingFrame
+                
+                Input.Name = "Input"
+                Input.Parent = TabContentFrame
                 Input.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
                 Input.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Input.BorderSizePixel = 0
-                Input.Size = UDim2.new(0, 420, 0, 53)
+                Input.Size = UDim2.new(1, 0, 0, 53)
                 
                 UICorner_10.CornerRadius = UDim.new(0.2, 0)
                 UICorner_10.Parent = Input
@@ -772,12 +821,12 @@ function EyeUI:CreateWindow(title, description)
                 local Label = Instance.new("TextLabel")
                 
                 Label.Name = "Label"
-                Label.Parent = ScrollingFrame
+                Label.Parent = TabContentFrame
                 Label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
                 Label.BackgroundTransparency = 1.000
                 Label.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Label.BorderSizePixel = 0
-                Label.Size = UDim2.new(0, 420, 0, 25)
+                Label.Size = UDim2.new(1, 0, 0, 25)
                 Label.Font = Enum.Font.GothamBold
                 Label.Text = text or "Label Text"
                 Label.TextColor3 = Color3.fromRGB(230, 230, 230)
@@ -807,12 +856,12 @@ function EyeUI:CreateWindow(title, description)
                 local UIPadding_2 = Instance.new("UIPadding")
                 
                 Dropdown.Name = "Dropdown"
-                Dropdown.Parent = ScrollingFrame
+                Dropdown.Parent = TabContentFrame
                 Dropdown.BackgroundColor3 = Color3.fromRGB(26, 26, 26)
                 Dropdown.BorderColor3 = Color3.fromRGB(0, 0, 0)
                 Dropdown.BorderSizePixel = 0
                 Dropdown.ClipsDescendants = true
-                Dropdown.Size = UDim2.new(0, 420, 0, 53)
+                Dropdown.Size = UDim2.new(1, 0, 0, 53)
                 
                 UICorner_17.CornerRadius = UDim.new(0.2, 0)
                 UICorner_17.Parent = Dropdown
@@ -911,19 +960,19 @@ function EyeUI:CreateWindow(title, description)
                     isOpen = not isOpen
                     if isOpen then
                         DropdownList.Visible = true
-                        Dropdown.Size = UDim2.new(0, 420, 0, 53 + maxHeight)
+                        Dropdown.Size = UDim2.new(1, 0, 0, 53 + maxHeight)
                         DropdownList.Size = UDim2.new(0, 400, 0, maxHeight)
                         ImageLabel_6.Rotation = 270
                     else
                         DropdownList.Visible = false
-                        Dropdown.Size = UDim2.new(0, 420, 0, 53)
+                        Dropdown.Size = UDim2.new(1, 0, 0, 53)
                         ImageLabel_6.Rotation = 90
                     end
                 end
                 
                 DropdownButton.MouseButton1Click:Connect(toggleDropdown)
                 
-                -- Create dropdown options
+                
                 for i, option in ipairs(options.List) do
                     local OptionButton = Instance.new("TextButton")
                     local UICorner_19 = Instance.new("UICorner")
@@ -972,14 +1021,14 @@ function EyeUI:CreateWindow(title, description)
                     options.List = newList or options.List
                     maxHeight = math.min(#options.List * 30 + 10, 150)
                     
-                    -- Clear existing options
+                
                     for _, child in ipairs(DropdownList:GetChildren()) do
                         if child:IsA("TextButton") then
                             child:Destroy()
                         end
                     end
                     
-                    -- Create new options
+                
                     for i, option in ipairs(options.List) do
                         local OptionButton = Instance.new("TextButton")
                         local UICorner_19 = Instance.new("UICorner")
