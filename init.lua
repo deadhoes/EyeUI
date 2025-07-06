@@ -1,6 +1,7 @@
 local EyeUI = {}
 
-function EyeUI:CreateWindow(title, subtitle, image)
+function EyeUI:CreateWindow(title, subtitle)
+    -- Main GUI Instances
     local ScreenGui = Instance.new("ScreenGui")
     local Frame = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
@@ -11,12 +12,18 @@ function EyeUI:CreateWindow(title, subtitle, image)
     local WindowIcon = Instance.new("ImageLabel")
     local CloseButton = Instance.new("TextButton")
     local CloseIcon = Instance.new("ImageLabel")
+    local MinimizeButton = Instance.new("TextButton")
+    local MinimizeIcon = Instance.new("ImageLabel")
     local TabsHolder = Instance.new("Frame")
     local UIListLayout = Instance.new("UIListLayout")
+    local SelectionIndicator = Instance.new("Frame")
     
+    -- ScreenGui Setup
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Name = "EyeUI_"..tostring(math.random(1, 1000))
     
+    -- Main Window Frame
     Frame.Parent = ScreenGui
     Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Frame.BorderSizePixel = 0
@@ -26,15 +33,17 @@ function EyeUI:CreateWindow(title, subtitle, image)
     UICorner.CornerRadius = UDim.new(0.02, 8)
     UICorner.Parent = Frame
     
+    -- Topbar
     Topbar.Name = "Topbar"
     Topbar.Parent = Frame
     Topbar.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Topbar.BorderSizePixel = 0
     Topbar.Size = UDim2.new(0, 511, 0, 50)
     
-    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.CornerRadius = UDim.new(0, 0)
     UICorner_2.Parent = Topbar
     
+    -- Title Labels
     TitleLabel.Parent = Topbar
     TitleLabel.BackgroundTransparency = 1
     TitleLabel.Position = UDim2.new(0.091, 0, -0.14, 0)
@@ -55,12 +64,14 @@ function EyeUI:CreateWindow(title, subtitle, image)
     SubtitleLabel.TextSize = 12
     SubtitleLabel.TextXAlignment = Enum.TextXAlignment.Left
     
+    -- Window Icon
     WindowIcon.Parent = Topbar
     WindowIcon.BackgroundTransparency = 1
     WindowIcon.Position = UDim2.new(0.022, 0, 0.22, 0)
     WindowIcon.Size = UDim2.new(0, 25, 0, 25)
-    WindowIcon.Image = image or "rbxassetid://10747364761"
+    WindowIcon.Image = "rbxassetid://10747364761"
     
+    -- Close Button
     CloseButton.Name = "CloseButton"
     CloseButton.Parent = Topbar
     CloseButton.BackgroundTransparency = 1
@@ -75,6 +86,22 @@ function EyeUI:CreateWindow(title, subtitle, image)
     CloseIcon.Size = UDim2.new(0, 23, 0, 23)
     CloseIcon.Image = "rbxassetid://10747384394"
     
+    -- Minimize Button
+    MinimizeButton.Name = "MinimizeButton"
+    MinimizeButton.Parent = Topbar
+    MinimizeButton.BackgroundTransparency = 1
+    MinimizeButton.Position = UDim2.new(0.853, 0, 0, 0)
+    MinimizeButton.Size = UDim2.new(0, 36, 0, 50)
+    MinimizeButton.Font = Enum.Font.SourceSans
+    MinimizeButton.Text = ""
+    
+    MinimizeIcon.Parent = MinimizeButton
+    MinimizeIcon.BackgroundTransparency = 1
+    MinimizeIcon.Position = UDim2.new(0.302, 0, 0.263, 0)
+    MinimizeIcon.Size = UDim2.new(0, 23, 0, 23)
+    MinimizeIcon.Image = "rbxassetid://10734896206"
+    
+    -- Tabs Holder
     TabsHolder.Name = "TabsHolder"
     TabsHolder.Parent = Frame
     TabsHolder.BackgroundTransparency = 1
@@ -85,23 +112,69 @@ function EyeUI:CreateWindow(title, subtitle, image)
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
     UIListLayout.Padding = UDim.new(0, 5)
     
+    -- Selection Indicator
+    SelectionIndicator.Name = "SelectionIndicator"
+    SelectionIndicator.Parent = TabsHolder
+    SelectionIndicator.BackgroundColor3 = Color3.fromRGB(131, 131, 131)
+    SelectionIndicator.BorderSizePixel = 0
+    SelectionIndicator.Size = UDim2.new(0, 3, 0, 20)
+    SelectionIndicator.Visible = false
+    
+    -- Close button functionality
     CloseButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
     
+    -- Minimize button functionality
+    local minimized = false
+    local originalSize = Frame.Size
+    MinimizeButton.MouseButton1Click:Connect(function()
+        minimized = not minimized
+        if minimized then
+            Frame:TweenSize(UDim2.new(0, 511, 0, 50), "Out", "Quad", 0.2, true)
+        else
+            Frame:TweenSize(originalSize, "Out", "Quad", 0.2, true)
+        end
+    end)
+    
+    -- Smooth Dragging Functionality
     local UserInputService = game:GetService("UserInputService")
+    local TweenService = game:GetService("TweenService")
     local dragging
     local dragInput
     local dragStart
     local startPos
     
-    local function update(input)
+    local function Lerp(a, b, t)
+        return a + (b - a) * t
+    end
+    
+    local function SmoothUpdate(input)
         local delta = input.Position - dragStart
-        local newPos = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        local newPos = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X, 
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
+        
+        -- Screen boundary checking
         local viewportSize = workspace.CurrentCamera.ViewportSize
         local windowSize = Frame.AbsoluteSize
-        newPos = UDim2.new(newPos.X.Scale, math.clamp(newPos.X.Offset, 0, viewportSize.X - windowSize.X), newPos.Y.Scale, math.clamp(newPos.Y.Offset, 0, viewportSize.Y - windowSize.Y))
-        Frame.Position = newPos
+        
+        newPos = UDim2.new(
+            newPos.X.Scale,
+            math.clamp(newPos.X.Offset, 0, viewportSize.X - windowSize.X),
+            newPos.Y.Scale,
+            math.clamp(newPos.Y.Offset, 0, viewportSize.Y - windowSize.Y)
+        )
+        
+        -- Smooth movement
+        local currentPos = Frame.Position
+        local smoothX = Lerp(currentPos.X.Offset, newPos.X.Offset, 0.5)
+        local smoothY = Lerp(currentPos.Y.Offset, newPos.Y.Offset, 0.5)
+        
+        Frame.Position = UDim2.new(newPos.X.Scale, smoothX, newPos.Y.Scale, smoothY)
     end
     
     Topbar.InputBegan:Connect(function(input)
@@ -109,6 +182,7 @@ function EyeUI:CreateWindow(title, subtitle, image)
             dragging = true
             dragStart = input.Position
             startPos = Frame.Position
+            
             input.Changed:Connect(function()
                 if input.UserInputState == Enum.UserInputState.End then
                     dragging = false
@@ -125,10 +199,11 @@ function EyeUI:CreateWindow(title, subtitle, image)
     
     UserInputService.InputChanged:Connect(function(input)
         if input == dragInput and dragging then
-            update(input)
+            SmoothUpdate(input)
         end
     end)
     
+    -- Window API
     local window = {}
     local currentTab = nil
     
@@ -137,7 +212,6 @@ function EyeUI:CreateWindow(title, subtitle, image)
         local TabButton = Instance.new("TextButton")
         local TabIcon = Instance.new("ImageLabel")
         local TabLabel = Instance.new("TextLabel")
-        local SelectionIndicator = Instance.new("Frame")
         
         Tab.Name = name or "Tab"
         Tab.Parent = TabsHolder
@@ -157,29 +231,23 @@ function EyeUI:CreateWindow(title, subtitle, image)
         TabIcon.Name = "TabIcon"
         TabIcon.Parent = TabButton
         TabIcon.BackgroundTransparency = 1
-        TabIcon.Position = UDim2.new(0.1, 0, 0.2, 0)
+        TabIcon.Position = UDim2.new(0.115, 0, 0.135, 0)
         TabIcon.Size = UDim2.new(0, 20, 0, 20)
         TabIcon.Image = icon or "rbxassetid://10734895856"
+        TabIcon.ImageColor3 = Color3.fromRGB(137, 137, 137)
         
         TabLabel.Name = "TabLabel"
         TabLabel.Parent = TabButton
         TabLabel.BackgroundTransparency = 1
-        TabLabel.Position = UDim2.new(0.35, 0, 0.15, 0)
-        TabLabel.Size = UDim2.new(0, 80, 0, 20)
+        TabLabel.Position = UDim2.new(0.334, 0, 0.239, 0)
+        TabLabel.Size = UDim2.new(0, 79, 0, 14)
         TabLabel.Font = Enum.Font.GothamBold
         TabLabel.Text = name or "Tab"
         TabLabel.TextColor3 = Color3.fromRGB(137, 137, 137)
         TabLabel.TextSize = 12
         TabLabel.TextXAlignment = Enum.TextXAlignment.Left
         
-        SelectionIndicator.Name = "SelectionIndicator"
-        SelectionIndicator.Parent = TabButton
-        SelectionIndicator.BackgroundColor3 = Color3.fromRGB(131, 131, 131)
-        SelectionIndicator.BorderSizePixel = 0
-        SelectionIndicator.Position = UDim2.new(0, 0, 0.1, 0)
-        SelectionIndicator.Size = UDim2.new(0, 3, 0, 20)
-        SelectionIndicator.Visible = false
-        
+        -- Tab content frame
         local ContentFrame = Instance.new("Frame")
         ContentFrame.Name = "ContentFrame"
         ContentFrame.Parent = Frame
@@ -188,34 +256,69 @@ function EyeUI:CreateWindow(title, subtitle, image)
         ContentFrame.Size = UDim2.new(0, 372, 0, 287)
         ContentFrame.Visible = false
         
+        -- Tab API
         local tab = {}
         
         function tab:Show()
+            -- Animate selection indicator
+            if SelectionIndicator.Visible then
+                local tween = TweenService:Create(
+                    SelectionIndicator,
+                    TweenInfo.new(0.2, Enum.EasingStyle.Quad, Enum.EasingDirection.Out),
+                    {Position = UDim2.new(0, 0, 0, Tab.AbsolutePosition.Y - TabsHolder.AbsolutePosition.Y + 4)}
+                )
+                tween:Play()
+            else
+                SelectionIndicator.Visible = true
+                SelectionIndicator.Position = UDim2.new(0, 0, 0, Tab.AbsolutePosition.Y - TabsHolder.AbsolutePosition.Y + 4)
+            end
+            
+            -- Hide current tab
             if currentTab then
                 currentTab.ContentFrame.Visible = false
-                if currentTab.TabButton:FindFirstChild("SelectionIndicator") then
-                    currentTab.TabButton.SelectionIndicator.Visible = false
-                end
                 if currentTab.TabButton:FindFirstChild("TabLabel") then
-                    currentTab.TabButton.TabLabel.TextColor3 = Color3.fromRGB(137, 137, 137)
+                    local tween = TweenService:Create(
+                        currentTab.TabButton.TabLabel,
+                        TweenInfo.new(0.2),
+                        {TextColor3 = Color3.fromRGB(137, 137, 137)}
+                    )
+                    tween:Play()
                 end
                 if currentTab.TabButton:FindFirstChild("TabIcon") then
-                    currentTab.TabButton.TabIcon.ImageColor3 = Color3.fromRGB(137, 137, 137)
+                    local tween = TweenService:Create(
+                        currentTab.TabButton.TabIcon,
+                        TweenInfo.new(0.2),
+                        {ImageColor3 = Color3.fromRGB(137, 137, 137)}
+                    )
+                    tween:Play()
                 end
             end
             
+            -- Show new tab
             ContentFrame.Visible = true
-            SelectionIndicator.Visible = true
-            TabLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
-            TabIcon.ImageColor3 = Color3.fromRGB(255, 255, 255)
+            local tween1 = TweenService:Create(
+                TabLabel,
+                TweenInfo.new(0.2),
+                {TextColor3 = Color3.fromRGB(230, 230, 230)}
+            )
+            local tween2 = TweenService:Create(
+                TabIcon,
+                TweenInfo.new(0.2),
+                {ImageColor3 = Color3.fromRGB(255, 255, 255)}
+            )
+            tween1:Play()
+            tween2:Play()
+            
             currentTab = tab
         end
         
+        -- Connect click event
         TabButton.MouseButton1Click:Connect(function()
             tab:Show()
         end)
         
-        if #TabsHolder:GetChildren() == 1 then
+        -- Make first tab active by default
+        if #TabsHolder:GetChildren() == 1 then -- First tab
             tab:Show()
         end
         
@@ -224,8 +327,8 @@ function EyeUI:CreateWindow(title, subtitle, image)
             Button.Parent = ContentFrame
             Button.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
             Button.BorderSizePixel = 0
-            Button.Size = UDim2.new(0.9, 0, 0, 30)
             Button.Position = UDim2.new(0.05, 0, 0.05, 0)
+            Button.Size = UDim2.new(0.9, 0, 0, 30)
             Button.Font = Enum.Font.GothamBold
             Button.Text = text or "Button"
             Button.TextColor3 = Color3.fromRGB(230, 230, 230)
