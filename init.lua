@@ -1,6 +1,6 @@
 local EyeUI = {}
 
-function EyeUI:CreateWindow(title, subtitle, image)
+function EyeUI:CreateWindow(title, subtitle)
     local ScreenGui = Instance.new("ScreenGui")
     local Frame = Instance.new("Frame")
     local UICorner = Instance.new("UICorner")
@@ -14,14 +14,17 @@ function EyeUI:CreateWindow(title, subtitle, image)
     local TabsHolder = Instance.new("Frame")
     local UIListLayout = Instance.new("UIListLayout")
     
+    -- Main GUI Setup
     ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
     ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+    ScreenGui.Name = "EyeUI_"..tostring(math.random(1, 1000))
     
     Frame.Parent = ScreenGui
     Frame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
     Frame.BorderSizePixel = 0
-    Frame.Position = UDim2.new(0.007, 0, 0.223, 0)
+    Frame.Position = UDim2.new(0.3, 0, 0.3, 0) -- Default centered position
     Frame.Size = UDim2.new(0, 511, 0, 337)
+    Frame.Name = "MainWindow"
     
     UICorner.CornerRadius = UDim.new(0.02, 8)
     UICorner.Parent = Frame
@@ -33,7 +36,7 @@ function EyeUI:CreateWindow(title, subtitle, image)
     Topbar.BorderSizePixel = 0
     Topbar.Size = UDim2.new(0, 511, 0, 50)
     
-    UICorner_2.CornerRadius = UDim.new(1, 0)
+    UICorner_2.CornerRadius = UDim.new(0, 0)
     UICorner_2.Parent = Topbar
     
     TitleLabel.Parent = Topbar
@@ -60,24 +63,30 @@ function EyeUI:CreateWindow(title, subtitle, image)
     Icon.BackgroundTransparency = 1
     Icon.Position = UDim2.new(0.022, 0, 0.22, 0)
     Icon.Size = UDim2.new(0, 25, 0, 25)
-    Icon.Image = image
+    Icon.Image = "rbxassetid://10747364761"
+    Icon.Name = "WindowIcon"
     
-    -- Close Button
+    -- Close Button (without hover effects)
+    CloseButton.Name = "CloseButton"
     CloseButton.Parent = Topbar
     CloseButton.BackgroundTransparency = 1
     CloseButton.Position = UDim2.new(0.929, 0, 0, 0)
     CloseButton.Size = UDim2.new(0, 36, 0, 50)
     CloseButton.Font = Enum.Font.SourceSans
     CloseButton.Text = ""
+    CloseButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+    CloseButton.TextSize = 14
     
+    CloseIcon.Name = "CloseIcon"
     CloseIcon.Parent = CloseButton
     CloseIcon.BackgroundTransparency = 1
     CloseIcon.Position = UDim2.new(0.135, 0, 0.263, 0)
     CloseIcon.Size = UDim2.new(0, 23, 0, 23)
     CloseIcon.Image = "rbxassetid://10747384394"
+    CloseIcon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Fixed color
     
     -- Tabs Holder
-    TabsHolder.Name = "Tabs"
+    TabsHolder.Name = "TabsHolder"
     TabsHolder.Parent = Frame
     TabsHolder.BackgroundTransparency = 1
     TabsHolder.Position = UDim2.new(0, 0, 0.135, 0)
@@ -85,13 +94,14 @@ function EyeUI:CreateWindow(title, subtitle, image)
     
     UIListLayout.Parent = TabsHolder
     UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    UIListLayout.Padding = UDim.new(0, 5)
     
     -- Close button functionality
     CloseButton.MouseButton1Click:Connect(function()
         ScreenGui:Destroy()
     end)
     
-    -- Dragging functionality
+    -- Enhanced Dragging Functionality
     local UserInputService = game:GetService("UserInputService")
     local dragging
     local dragInput
@@ -100,11 +110,29 @@ function EyeUI:CreateWindow(title, subtitle, image)
     
     local function update(input)
         local delta = input.Position - dragStart
-        Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        local newPos = UDim2.new(
+            startPos.X.Scale, 
+            startPos.X.Offset + delta.X, 
+            startPos.Y.Scale, 
+            startPos.Y.Offset + delta.Y
+        )
+        
+        -- Screen boundary checking
+        local viewportSize = workspace.CurrentCamera.ViewportSize
+        local windowSize = Frame.AbsoluteSize
+        
+        newPos = UDim2.new(
+            newPos.X.Scale,
+            math.clamp(newPos.X.Offset, 0, viewportSize.X - windowSize.X),
+            newPos.Y.Scale,
+            math.clamp(newPos.Y.Offset, 0, viewportSize.Y - windowSize.Y)
+        )
+        
+        Frame.Position = newPos
     end
     
     Topbar.InputBegan:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.MouseButton1 then
             dragging = true
             dragStart = input.Position
             startPos = Frame.Position
@@ -118,7 +146,7 @@ function EyeUI:CreateWindow(title, subtitle, image)
     end)
     
     Topbar.InputChanged:Connect(function(input)
-        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+        if input.UserInputType == Enum.UserInputType.MouseMovement then
             dragInput = input
         end
     end)
@@ -129,13 +157,15 @@ function EyeUI:CreateWindow(title, subtitle, image)
         end
     end)
     
-    -- Window methods
+    -- Window API
     local window = {}
+    local currentTab = nil
     
     function window:AddTab(name, icon)
         local Tab = Instance.new("Frame")
-        local TabLabel = Instance.new("TextLabel")
+        local TabButton = Instance.new("TextButton")
         local TabIcon = Instance.new("ImageLabel")
+        local TabLabel = Instance.new("TextLabel")
         
         Tab.Name = name or "Tab"
         Tab.Parent = TabsHolder
@@ -144,34 +174,64 @@ function EyeUI:CreateWindow(title, subtitle, image)
         Tab.BorderSizePixel = 0
         Tab.Size = UDim2.new(0, 139, 0, 29)
         
-        TabLabel.Parent = Tab
+        TabButton.Name = "TabButton"
+        TabButton.Parent = Tab
+        TabButton.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+        TabButton.BackgroundTransparency = 1
+        TabButton.BorderSizePixel = 0
+        TabButton.Size = UDim2.new(1, 0, 1, 0)
+        TabButton.Font = Enum.Font.SourceSans
+        TabButton.Text = ""
+        TabButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+        TabButton.TextSize = 14
+        
+        TabIcon.Name = "TabIcon"
+        TabIcon.Parent = TabButton
+        TabIcon.BackgroundTransparency = 1
+        TabIcon.Position = UDim2.new(0.1, 0, 0.2, 0)
+        TabIcon.Size = UDim2.new(0, 20, 0, 20)
+        TabIcon.Image = icon or "rbxassetid://10734895856"
+        TabIcon.ImageColor3 = Color3.fromRGB(255, 255, 255) -- Fixed color
+        
+        TabLabel.Name = "TabLabel"
+        TabLabel.Parent = TabButton
         TabLabel.BackgroundTransparency = 1
-        TabLabel.Position = UDim2.new(0.334, 0, 0.239, 0)
-        TabLabel.Size = UDim2.new(0, 79, 0, 14)
+        TabLabel.Position = UDim2.new(0.35, 0, 0.15, 0)
+        TabLabel.Size = UDim2.new(0, 80, 0, 20)
         TabLabel.Font = Enum.Font.GothamBold
         TabLabel.Text = name or "Tab"
         TabLabel.TextColor3 = Color3.fromRGB(230, 230, 230)
         TabLabel.TextSize = 12
         TabLabel.TextXAlignment = Enum.TextXAlignment.Left
         
-        TabIcon.Parent = Tab
-        TabIcon.BackgroundTransparency = 1
-        TabIcon.Position = UDim2.new(0.115, 0, 0.135, 0)
-        TabIcon.Size = UDim2.new(0, 20, 0, 20)
-        TabIcon.Image = icon or "rbxassetid://10734895856"
+        -- Tab content frame
+        local ContentFrame = Instance.new("Frame")
+        ContentFrame.Name = "ContentFrame"
+        ContentFrame.Parent = Frame
+        ContentFrame.BackgroundTransparency = 1
+        ContentFrame.Position = UDim2.new(0.272, 0, 0.148, 0)
+        ContentFrame.Size = UDim2.new(0, 372, 0, 287)
+        ContentFrame.Visible = false
         
-        -- Return tab object
+        -- Tab API
         local tab = {}
         
         function tab:Show()
-            -- You can add content display logic here
-            print("Showing tab:", name)
+            if currentTab then
+                currentTab.ContentFrame.Visible = false
+            end
+            ContentFrame.Visible = true
+            currentTab = tab
         end
         
-        -- Connect click event
-        Tab.MouseButton1Click:Connect(function()
+        TabButton.MouseButton1Click:Connect(function()
             tab:Show()
         end)
+        
+        -- Make first tab active by default
+        if #TabsHolder:GetChildren() == 1 then -- First tab
+            tab:Show()
+        end
         
         return tab
     end
