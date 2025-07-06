@@ -32,7 +32,7 @@ function EyeUI:CreateWindow(title, subtitle, image)
     Topbar.BorderSizePixel = 0
     Topbar.Size = UDim2.new(0, 511, 0, 50)
     
-    UICorner_2.CornerRadius = UDim.new(0, 0)
+    UICorner_2.CornerRadius = UDim.new(1, 0)
     UICorner_2.Parent = Topbar
     
     TitleLabel.Parent = Topbar
