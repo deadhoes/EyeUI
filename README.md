@@ -1,2 +1,2 @@
 # EyeUI
--# Cool UI
+Cool UI
