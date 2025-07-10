@@ -352,13 +352,13 @@ function Tab:Select()
     self.Window.CurrentTab = self
 end
 
--- Also update the TabSelector initialization to start at position 0:
+-- And make sure the TabSelector is initialized like this (only once):
 local TabSelector = Instance.new("Frame")
 TabSelector.Name = "Selector"
 TabSelector.Parent = TabButton
 TabSelector.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
 TabSelector.BorderSizePixel = 0
-TabSelector.Position = UDim2.new(0, 0, 0.5, -10) -- Changed from 0 to -10
+TabSelector.Position = UDim2.new(0, 0, 0.5, -10)
 TabSelector.Size = UDim2.new(0, 0, 0, 20)
 TabSelector.Visible = false
         
