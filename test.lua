@@ -262,15 +262,6 @@ function EyeUI:CreateWindow(config)
         TabTitle.TextSize = 14
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
         
-        local TabSelector = Instance.new("Frame")
-        TabSelector.Name = "Selector"
-        TabSelector.Parent = TabButton
-        TabSelector.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
-        TabSelector.BorderSizePixel = 0
-        TabSelector.Position = UDim2.new(0, 0, 0.5, -10)
-        TabSelector.Size = UDim2.new(0, 0, 0, 20)
-        TabSelector.Visible = false
-        
         local SelectorCorner = Instance.new("UICorner")
         SelectorCorner.CornerRadius = UDim.new(1, 0)
         SelectorCorner.Parent = TabSelector
