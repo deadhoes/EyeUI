@@ -317,23 +317,50 @@ function EyeUI:CreateWindow(config)
         Tab.Icon = config.Icon
         
         -- Tab Functions
-        function Tab:Select()
-            -- Hide all tabs
-            for _, tab in pairs(self.Window.Tabs) do
-                tab.TabContent.Visible = false
-                tab.TabSelector.Visible = false
-            end
-            
-            -- Show this tab
-            self.TabContent.Visible = true
-            self.TabSelector.Visible = true
-            
-            -- Animate selector
-            local tween = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {Size = UDim2.new(0, 3, 0, 20)})
-            tween:Play()
-            
-            self.Window.CurrentTab = self
+        -- In the Window:CreateTab function, replace the Select function with this new version:
+function Tab:Select()
+    -- Hide all tabs
+    for _, tab in pairs(self.Window.Tabs) do
+        tab.TabContent.Visible = false
+        if tab ~= self then
+            -- Animate selector out for other tabs
+            local tweenOut = TweenService:Create(tab.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 0, 0, 20),
+                Position = UDim2.new(0, 0, 0.5, -10)
+            })
+            tweenOut:Play()
+            tab.TabSelector.Visible = false
         end
+    end
+    
+    -- Show this tab
+    self.TabContent.Visible = true
+    self.TabSelector.Visible = true
+    
+    -- Animate selector in with slide effect
+    local tweenSize = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+        Size = UDim2.new(0, 3, 0, 20)
+    })
+    
+    local tweenPos = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+        Position = UDim2.new(0, 5, 0.5, -10)
+    })
+    
+    tweenSize:Play()
+    tweenPos:Play()
+    
+    self.Window.CurrentTab = self
+end
+
+-- Also update the TabSelector initialization to start at position 0:
+local TabSelector = Instance.new("Frame")
+TabSelector.Name = "Selector"
+TabSelector.Parent = TabButton
+TabSelector.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+TabSelector.BorderSizePixel = 0
+TabSelector.Position = UDim2.new(0, 0, 0.5, -10) -- Changed from 0 to -10
+TabSelector.Size = UDim2.new(0, 0, 0, 20)
+TabSelector.Visible = false
         
         function Tab:CreateButton(config)
             config = config or {}
