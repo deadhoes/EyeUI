@@ -244,6 +244,20 @@ function EyeUI:CreateWindow(config)
         TabButton.BackgroundTransparency = 1
         TabButton.Size = UDim2.new(1, -10, 0, 37)
         
+        -- Tab Selector (Fixed: moved before it's used)
+        local TabSelector = Instance.new("Frame")
+        TabSelector.Name = "Selector"
+        TabSelector.Parent = TabButton
+        TabSelector.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
+        TabSelector.BorderSizePixel = 0
+        TabSelector.Position = UDim2.new(0, 0, 0.5, -10)
+        TabSelector.Size = UDim2.new(0, 0, 0, 20)
+        TabSelector.Visible = false
+        
+        local SelectorCorner = Instance.new("UICorner")
+        SelectorCorner.CornerRadius = UDim.new(1, 0)
+        SelectorCorner.Parent = TabSelector
+        
         local TabIcon = Instance.new("ImageLabel")
         TabIcon.Parent = TabButton
         TabIcon.BackgroundTransparency = 1
@@ -261,10 +275,6 @@ function EyeUI:CreateWindow(config)
         TabTitle.TextColor3 = Color3.fromRGB(230, 230, 230)
         TabTitle.TextSize = 14
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
-        
-        local SelectorCorner = Instance.new("UICorner")
-        SelectorCorner.CornerRadius = UDim.new(1, 0)
-        SelectorCorner.Parent = TabSelector
         
         local TabInteract = Instance.new("TextButton")
         TabInteract.Parent = TabButton
@@ -308,50 +318,39 @@ function EyeUI:CreateWindow(config)
         Tab.Icon = config.Icon
         
         -- Tab Functions
-        -- In the Window:CreateTab function, replace the Select function with this new version:
-function Tab:Select()
-    -- Hide all tabs
-    for _, tab in pairs(self.Window.Tabs) do
-        tab.TabContent.Visible = false
-        if tab ~= self then
-            -- Animate selector out for other tabs
-            local tweenOut = TweenService:Create(tab.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-                Size = UDim2.new(0, 0, 0, 20),
-                Position = UDim2.new(0, 0, 0.5, -10)
+        function Tab:Select()
+            -- Hide all tabs
+            for _, tab in pairs(self.Window.Tabs) do
+                tab.TabContent.Visible = false
+                if tab ~= self then
+                    -- Animate selector out for other tabs
+                    local tweenOut = TweenService:Create(tab.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                        Size = UDim2.new(0, 0, 0, 20),
+                        Position = UDim2.new(0, 0, 0.5, -10)
+                    })
+                    tweenOut:Play()
+                    tab.TabSelector.Visible = false
+                end
+            end
+            
+            -- Show this tab
+            self.TabContent.Visible = true
+            self.TabSelector.Visible = true
+            
+            -- Animate selector in with slide effect
+            local tweenSize = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                Size = UDim2.new(0, 3, 0, 20)
             })
-            tweenOut:Play()
-            tab.TabSelector.Visible = false
+            
+            local tweenPos = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                Position = UDim2.new(0, 5, 0.5, -10)
+            })
+            
+            tweenSize:Play()
+            tweenPos:Play()
+            
+            self.Window.CurrentTab = self
         end
-    end
-    
-    -- Show this tab
-    self.TabContent.Visible = true
-    self.TabSelector.Visible = true
-    
-    -- Animate selector in with slide effect
-    local tweenSize = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-        Size = UDim2.new(0, 3, 0, 20)
-    })
-    
-    local tweenPos = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-        Position = UDim2.new(0, 5, 0.5, -10)
-    })
-    
-    tweenSize:Play()
-    tweenPos:Play()
-    
-    self.Window.CurrentTab = self
-end
-
--- And make sure the TabSelector is initialized like this (only once):
-local TabSelector = Instance.new("Frame")
-TabSelector.Name = "Selector"
-TabSelector.Parent = TabButton
-TabSelector.BackgroundColor3 = Color3.fromRGB(230, 230, 230)
-TabSelector.BorderSizePixel = 0
-TabSelector.Position = UDim2.new(0, 0, 0.5, -10)
-TabSelector.Size = UDim2.new(0, 0, 0, 20)
-TabSelector.Visible = false
         
         function Tab:CreateButton(config)
             config = config or {}
@@ -502,59 +501,62 @@ TabSelector.Visible = false
         config.Icon = config.Icon or "rbxassetid://10709770005"
         config.Duration = config.Duration or 5
         
-        local Notification = Instance.new("Frame")
-        Notification.Parent = self.NotificationsContainer
-        Notification.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
-        Notification.BorderSizePixel = 0
-        Notification.Size = UDim2.new(1, 0, 0, 80)
-        
-        local NotifCorner = Instance.new("UICorner")
-        NotifCorner.CornerRadius = UDim.new(0, 12)
-        NotifCorner.Parent = Notification
-        
-        local NotifIcon = Instance.new("ImageLabel")
-        NotifIcon.Parent = Notification
-        NotifIcon.BackgroundTransparency = 1
-        NotifIcon.Position = UDim2.new(0, 15, 0.5, -12)
-        NotifIcon.Size = UDim2.new(0, 24, 0, 24)
-        NotifIcon.Image = config.Icon
-        
-        local NotifTitle = Instance.new("TextLabel")
-        NotifTitle.Parent = Notification
-        NotifTitle.BackgroundTransparency = 1
-        NotifTitle.Position = UDim2.new(0, 50, 0, 10)
-        NotifTitle.Size = UDim2.new(1, -60, 0, 20)
-        NotifTitle.Font = Enum.Font.GothamBold
-        NotifTitle.Text = config.Title
-        NotifTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-        NotifTitle.TextSize = 16
-        NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
-        
-        local NotifDesc = Instance.new("TextLabel")
-        NotifDesc.Parent = Notification
-        NotifDesc.BackgroundTransparency = 1
-        NotifDesc.Position = UDim2.new(0, 50, 0, 30)
-        NotifDesc.Size = UDim2.new(1, -60, 0, 40)
-        NotifDesc.Font = Enum.Font.Gotham
-        NotifDesc.Text = config.Description
-        NotifDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
-        NotifDesc.TextSize = 14
-        NotifDesc.TextWrapped = true
-        NotifDesc.TextXAlignment = Enum.TextXAlignment.Left
-        NotifDesc.TextYAlignment = Enum.TextYAlignment.Top
-        
-        -- Animate in
-        Notification.Position = UDim2.new(1, 0, 0, 0)
-        local tweenIn = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0, 0, 0, 0)})
-        tweenIn:Play()
-        
-        -- Auto dismiss
-        wait(config.Duration)
-        local tweenOut = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(1, 0, 0, 0)})
-        tweenOut:Play()
-        
-        tweenOut.Completed:Connect(function()
-            Notification:Destroy()
+        -- Use spawn or coroutine for non-blocking delay
+        spawn(function()
+            local Notification = Instance.new("Frame")
+            Notification.Parent = self.NotificationsContainer
+            Notification.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+            Notification.BorderSizePixel = 0
+            Notification.Size = UDim2.new(1, 0, 0, 80)
+            
+            local NotifCorner = Instance.new("UICorner")
+            NotifCorner.CornerRadius = UDim.new(0, 12)
+            NotifCorner.Parent = Notification
+            
+            local NotifIcon = Instance.new("ImageLabel")
+            NotifIcon.Parent = Notification
+            NotifIcon.BackgroundTransparency = 1
+            NotifIcon.Position = UDim2.new(0, 15, 0.5, -12)
+            NotifIcon.Size = UDim2.new(0, 24, 0, 24)
+            NotifIcon.Image = config.Icon
+            
+            local NotifTitle = Instance.new("TextLabel")
+            NotifTitle.Parent = Notification
+            NotifTitle.BackgroundTransparency = 1
+            NotifTitle.Position = UDim2.new(0, 50, 0, 10)
+            NotifTitle.Size = UDim2.new(1, -60, 0, 20)
+            NotifTitle.Font = Enum.Font.GothamBold
+            NotifTitle.Text = config.Title
+            NotifTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+            NotifTitle.TextSize = 16
+            NotifTitle.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local NotifDesc = Instance.new("TextLabel")
+            NotifDesc.Parent = Notification
+            NotifDesc.BackgroundTransparency = 1
+            NotifDesc.Position = UDim2.new(0, 50, 0, 30)
+            NotifDesc.Size = UDim2.new(1, -60, 0, 40)
+            NotifDesc.Font = Enum.Font.Gotham
+            NotifDesc.Text = config.Description
+            NotifDesc.TextColor3 = Color3.fromRGB(200, 200, 200)
+            NotifDesc.TextSize = 14
+            NotifDesc.TextWrapped = true
+            NotifDesc.TextXAlignment = Enum.TextXAlignment.Left
+            NotifDesc.TextYAlignment = Enum.TextYAlignment.Top
+            
+            -- Animate in
+            Notification.Position = UDim2.new(1, 0, 0, 0)
+            local tweenIn = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(0, 0, 0, 0)})
+            tweenIn:Play()
+            
+            -- Auto dismiss
+            wait(config.Duration)
+            local tweenOut = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back), {Position = UDim2.new(1, 0, 0, 0)})
+            tweenOut:Play()
+            
+            tweenOut.Completed:Connect(function()
+                Notification:Destroy()
+            end)
         end)
     end
     
