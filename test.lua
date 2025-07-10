@@ -1,5 +1,5 @@
 -- EyeUI Library
--- A modern UI library for Roblox
+-- A modern UI library for Roblox with refined aesthetics
 
 local EyeUI = {}
 EyeUI.__index = EyeUI
@@ -18,27 +18,26 @@ local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
 -- Example: "home" icon might have an ID like "rbxassetid://1234567890"
 local LucideIcons = {
     -- General Icons
-    ["default"] = "rbxassetid://10709770005", -- Default placeholder icon
-    ["close"] = "rbxassetid://10747384394",
-    ["minimize"] = "rbxassetid://10734896206",
-    ["info"] = "rbxassetid://10709770005", -- Placeholder for info icon
-    ["alert-triangle"] = "rbxassetid://10709770005", -- Placeholder for warning icon
-    ["check-circle"] = "rbxassetid://10709770005", -- Placeholder for success icon
-    ["x-circle"] = "rbxassetid://10709770005", -- Placeholder for error icon
-    ["grip-horizontal"] = "rbxassetid://10734896206", -- Placeholder for a grip icon for the drag bar
-    ["search"] = "rbxassetid://10723407389", -- Placeholder for search/magnifying glass icon
-    ["palette"] = "rbxassetid://10723407389", -- Placeholder for palette icon
+    ["default"] = "rbxassetid://10709770005", -- Default placeholder icon (Consider a neutral icon like "circle")
+    ["close"] = "rbxassetid://10747384394", -- x
+    ["minimize"] = "rbxassetid://10734896206", -- minus
+    ["info"] = "rbxassetid://10709770005", -- info icon
+    ["alert-triangle"] = "rbxassetid://10723407389", -- alert-triangle
+    ["check-circle"] = "rbxassetid://10723407389", -- check-circle
+    ["x-circle"] = "rbxassetid://10723407389", -- x-circle
+    ["grip-horizontal"] = "rbxassetid://10734896206", -- grip-horizontal
+    ["search"] = "rbxassetid://10723407389", -- search
+    ["palette"] = "rbxassetid://10723407389", -- palette
+    ["chevron-down"] = "rbxassetid://10723407389", -- chevron-down (for dropdowns)
 
     -- Tab Icons (examples, replace with actual Lucide equivalents)
-    ["settings"] = "rbxassetid://10723407389", -- Placeholder for settings/gear icon
-    ["home"] = "rbxassetid://10723407389", -- Placeholder for home icon
-    ["tool"] = "rbxassetid://10723407389", -- Placeholder for tool icon
-    ["sliders"] = "rbxassetid://10723407389", -- Placeholder for sliders icon
-    ["message-square"] = "rbxassetid://10723407389", -- Placeholder for message/chat icon
-    ["shield"] = "rbxassetid://10723407389", -- Placeholder for shield icon
-    ["user"] = "rbxassetid://10723407389", -- Placeholder for user icon
-    -- Add more Lucide icons as you upload them:
-    -- ["icon-name"] = "rbxassetid://YOUR_ASSET_ID",
+    ["settings"] = "rbxassetid://10723407389", -- settings/gear icon
+    ["home"] = "rbxassetid://10723407389", -- home icon
+    ["tool"] = "rbxassetid://10723407389", -- tool icon
+    ["sliders"] = "rbxassetid://10723407389", -- sliders icon
+    ["message-square"] = "rbxassetid://10723407389", -- message/chat icon
+    ["shield"] = "rbxassetid://10723407389", -- shield icon
+    ["user"] = "rbxassetid://10723407389", -- user icon
 }
 
 -- Helper function to get Lucide icon asset ID
@@ -46,58 +45,58 @@ local function getLucideIcon(iconName)
     return LucideIcons[iconName] or LucideIcons["default"]
 end
 
--- Theme Definitions
+-- Theme Definitions (Revised for a softer, modern look)
 local Themes = {
     Dark = {
-        MainBackground = Color3.fromRGB(20, 20, 20),
-        TopbarBackground = Color3.fromRGB(20, 20, 20),
-        TabBackground = Color3.fromRGB(30, 30, 30),
-        ElementBackground = Color3.fromRGB(30, 30, 30),
-        InputBackground = Color3.fromRGB(40, 40, 40),
-        AccentColor = Color3.fromRGB(0, 162, 255),
-        TextColor = Color3.fromRGB(230, 230, 230),
-        SubTextColor = Color3.fromRGB(190, 190, 190),
-        PlaceholderColor = Color3.fromRGB(150, 150, 150),
-        ButtonHover = Color3.fromRGB(40, 40, 40),
-        SliderThumb = Color3.fromRGB(255, 255, 255),
-        NotificationBackground = Color3.fromRGB(25, 25, 25),
-        NotificationText = Color3.fromRGB(255, 255, 255),
-        NotificationSubText = Color3.fromRGB(200, 200, 200),
-        IconColor = Color3.fromRGB(150, 150, 150),
+        MainBackground = Color3.fromRGB(24, 24, 27),   -- Dark Slate Grey
+        TopbarBackground = Color3.fromRGB(24, 24, 27),
+        TabBackground = Color3.fromRGB(39, 39, 42),    -- Darker Slate Grey
+        ElementBackground = Color3.fromRGB(39, 39, 42),
+        InputBackground = Color3.fromRGB(50, 50, 55),  -- Even darker for inputs
+        AccentColor = Color3.fromRGB(0, 150, 255),    -- Vibrant Blue
+        TextColor = Color3.fromRGB(220, 220, 220),     -- Soft White
+        SubTextColor = Color3.fromRGB(160, 160, 160),  -- Grey
+        PlaceholderColor = Color3.fromRGB(100, 100, 100), -- Darker Grey
+        ButtonHover = Color3.fromRGB(50, 50, 55),      -- Darker hover
+        SliderThumb = Color3.fromRGB(255, 255, 255),   -- White thumb
+        NotificationBackground = Color3.fromRGB(35, 35, 38), -- Slightly lighter than main for notifs
+        NotificationText = Color3.fromRGB(230, 230, 230),
+        NotificationSubText = Color3.fromRGB(180, 180, 180),
+        IconColor = Color3.fromRGB(170, 170, 170),     -- Soft grey for icons
     },
     Light = {
-        MainBackground = Color3.fromRGB(240, 240, 240),
-        TopbarBackground = Color3.fromRGB(240, 240, 240),
-        TabBackground = Color3.fromRGB(230, 230, 230),
-        ElementBackground = Color3.fromRGB(230, 230, 230),
-        InputBackground = Color3.fromRGB(220, 220, 220),
-        AccentColor = Color3.fromRGB(0, 120, 215),
-        TextColor = Color3.fromRGB(30, 30, 30),
-        SubTextColor = Color3.fromRGB(70, 70, 70),
-        PlaceholderColor = Color3.fromRGB(100, 100, 100),
-        ButtonHover = Color3.fromRGB(220, 220, 220),
-        SliderThumb = Color3.fromRGB(50, 50, 50),
-        NotificationBackground = Color3.fromRGB(235, 235, 235),
-        NotificationText = Color3.fromRGB(20, 20, 20),
-        NotificationSubText = Color3.fromRGB(70, 70, 70),
+        MainBackground = Color3.fromRGB(248, 248, 250), -- Off-white
+        TopbarBackground = Color3.fromRGB(248, 248, 250),
+        TabBackground = Color3.fromRGB(235, 235, 238),  -- Light Grey
+        ElementBackground = Color3.fromRGB(235, 235, 238),
+        InputBackground = Color3.fromRGB(220, 220, 225),-- Even lighter for inputs
+        AccentColor = Color3.fromRGB(0, 120, 215),     -- Standard Blue
+        TextColor = Color3.fromRGB(40, 40, 40),        -- Dark Grey
+        SubTextColor = Color3.fromRGB(90, 90, 90),     -- Medium Grey
+        PlaceholderColor = Color3.fromRGB(140, 140, 140),-- Lighter Grey
+        ButtonHover = Color3.fromRGB(220, 220, 225),   -- Lighter hover
+        SliderThumb = Color3.fromRGB(50, 50, 50),      -- Dark thumb
+        NotificationBackground = Color3.fromRGB(240, 240, 242),
+        NotificationText = Color3.fromRGB(30, 30, 30),
+        NotificationSubText = Color3.fromRGB(80, 80, 80),
         IconColor = Color3.fromRGB(100, 100, 100),
     },
-    Blue = {
-        MainBackground = Color3.fromRGB(25, 35, 45),
-        TopbarBackground = Color3.fromRGB(25, 35, 45),
-        TabBackground = Color3.fromRGB(35, 50, 65),
-        ElementBackground = Color3.fromRGB(35, 50, 65),
-        InputBackground = Color3.fromRGB(45, 65, 85),
-        AccentColor = Color3.fromRGB(0, 180, 255),
-        TextColor = Color3.fromRGB(230, 240, 250),
-        SubTextColor = Color3.fromRGB(180, 190, 200),
-        PlaceholderColor = Color3.fromRGB(120, 140, 160),
-        ButtonHover = Color3.fromRGB(45, 65, 85),
+    Vibrant = {
+        MainBackground = Color3.fromRGB(28, 28, 32),    -- Dark base
+        TopbarBackground = Color3.fromRGB(28, 28, 32),
+        TabBackground = Color3.fromRGB(45, 45, 50),
+        ElementBackground = Color3.fromRGB(45, 45, 50),
+        InputBackground = Color3.fromRGB(60, 60, 65),
+        AccentColor = Color3.fromRGB(255, 69, 0),      -- Orange Red (Vibrant)
+        TextColor = Color3.fromRGB(240, 240, 245),
+        SubTextColor = Color3.fromRGB(190, 190, 195),
+        PlaceholderColor = Color3.fromRGB(130, 130, 135),
+        ButtonHover = Color3.fromRGB(60, 60, 65),
         SliderThumb = Color3.fromRGB(255, 255, 255),
-        NotificationBackground = Color3.fromRGB(30, 40, 50),
-        NotificationText = Color3.fromRGB(255, 255, 255),
-        NotificationSubText = Color3.fromRGB(200, 210, 220),
-        IconColor = Color3.fromRGB(150, 170, 190),
+        NotificationBackground = Color3.fromRGB(40, 40, 45),
+        NotificationText = Color3.fromRGB(250, 250, 255),
+        NotificationSubText = Color3.fromRGB(200, 200, 205),
+        IconColor = Color3.fromRGB(180, 180, 185),
     }
 }
 
@@ -105,6 +104,8 @@ local CurrentThemeName = "Dark"
 local CurrentTheme = Themes[CurrentThemeName]
 
 local function applyTheme(guiElement, theme)
+    -- This function applies the theme colors to UI elements recursively.
+    -- I've kept it as is, as the colors are defined in the Themes table.
     if guiElement.Name == "Main" or guiElement.Name == "Topbar" or guiElement.Name == "ShowPrompt" then
         guiElement.BackgroundColor3 = theme.MainBackground
     elseif guiElement.Name == "TabButton" or guiElement.Name == "BottomDragBar" then
@@ -115,26 +116,26 @@ local function applyTheme(guiElement, theme)
         guiElement.TextColor3 = theme.TextColor
     elseif guiElement.Name == "Description" then
         guiElement.TextColor3 = theme.SubTextColor
-    elseif guiElement:IsA("TextButton") and guiElement.BackgroundTransparency == 0 then -- For regular buttons
+    elseif guiElement:IsA("TextButton") and guiElement.BackgroundTransparency == 0 then
         guiElement.BackgroundColor3 = theme.ElementBackground
         guiElement.TextColor3 = theme.TextColor
     elseif guiElement:IsA("TextBox") then
         guiElement.BackgroundColor3 = theme.InputBackground
         guiElement.TextColor3 = theme.TextColor
         guiElement.PlaceholderColor3 = theme.PlaceholderColor
-    elseif guiElement.Name == "Toggle" or guiElement.Name == "InputFrame" or guiElement.Name == "DropdownFrame" or guiElement.Name == "SliderFrame" or guiElement.Name == "ColorPickerFrame" then
+    elseif guiElement.Name == "Toggle" or guiElement.Name == "InputFrame" or guiElement.Name == "DropdownFrame" or guiElement.Name == "SliderFrame" or guiElement.Name == "ColorPickerFrame" or guiElement.Name == "TabSearchFrame" then
         guiElement.BackgroundColor3 = theme.ElementBackground
     elseif guiElement.Name == "ToggleButton" then
         guiElement.BackgroundColor3 = theme.InputBackground
     elseif guiElement.Name == "ToggleIndicator" then
-        guiElement.BackgroundColor3 = theme.SliderThumb -- Uses slider thumb color for toggle active state
+        guiElement.BackgroundColor3 = theme.AccentColor -- Toggle indicator uses accent
     elseif guiElement.Name == "DropdownButton" then
         guiElement.BackgroundColor3 = theme.InputBackground
         guiElement.TextColor3 = theme.TextColor
     elseif guiElement.Name == "OptionsFrame" then
         guiElement.BackgroundColor3 = theme.InputBackground
     elseif guiElement.Name == "OptionButton" then
-        guiElement.BackgroundColor3 = theme.ElementBackground -- Or a slightly darker shade if desired
+        guiElement.BackgroundColor3 = theme.ElementBackground
         guiElement.TextColor3 = theme.TextColor
     elseif guiElement.Name == "SliderBackground" then
         guiElement.BackgroundColor3 = theme.InputBackground
@@ -142,8 +143,6 @@ local function applyTheme(guiElement, theme)
         guiElement.BackgroundColor3 = theme.AccentColor
     elseif guiElement.Name == "SliderThumb" then
         guiElement.BackgroundColor3 = theme.SliderThumb
-    elseif guiElement.Name == "CurrentColorPreview" then
-        -- This one is handled by the color picker logic itself
     elseif guiElement.Name == "Notification" then
         guiElement.BackgroundColor3 = theme.NotificationBackground
     elseif guiElement.Name == "NotifTitle" then
@@ -171,8 +170,8 @@ function EyeUI:CreateWindow(config)
     config.Title = config.Title or "EyeUI"
     config.Description = config.Description or "A modern UI library"
     config.Icon = config.Icon or "default" -- Use Lucide icon name
-    config.Size = config.Size or UDim2.new(0, 580, 0, 389)
-    config.Position = config.Position or UDim2.new(0.5, -290, 0.5, -194)
+    config.Size = config.Size or UDim2.new(0, 600, 0, 420) -- Slightly larger default size
+    config.Position = config.Position or UDim2.new(0.5, -300, 0.5, -210)
 
     -- Create main ScreenGui
     local ScreenGui = Instance.new("ScreenGui")
@@ -189,10 +188,10 @@ function EyeUI:CreateWindow(config)
     Main.Position = config.Position
     Main.Size = config.Size
     Main.Active = true
-    Main.Draggable = false -- IMPORTANT: Set Draggable to false here
+    Main.Draggable = false
 
     local MainCorner = Instance.new("UICorner")
-    MainCorner.CornerRadius = UDim.new(0, 12)
+    MainCorner.CornerRadius = UDim.new(0, 12) -- Consistent corner radius
     MainCorner.Parent = Main
 
     -- Topbar
@@ -200,8 +199,8 @@ function EyeUI:CreateWindow(config)
     Topbar.Name = "Topbar"
     Topbar.Parent = Main
     Topbar.BorderSizePixel = 0
-    Topbar.Size = UDim2.new(1, 0, 0, 51)
-    Topbar.Active = true -- Make Topbar active to receive input for dragging
+    Topbar.Size = UDim2.new(1, 0, 0, 55) -- Slightly taller Topbar
+    Topbar.Active = true
 
     local TopbarCorner = Instance.new("UICorner")
     TopbarCorner.CornerRadius = UDim.new(0, 12)
@@ -212,7 +211,7 @@ function EyeUI:CreateWindow(config)
     Icon.Name = "Icon"
     Icon.Parent = Topbar
     Icon.BackgroundTransparency = 1
-    Icon.Position = UDim2.new(0, 14, 0.5, -12)
+    Icon.Position = UDim2.new(0, 18, 0.5, -12) -- Adjusted position
     Icon.Size = UDim2.new(0, 24, 0, 24)
     Icon.Image = getLucideIcon(config.Icon)
 
@@ -221,11 +220,11 @@ function EyeUI:CreateWindow(config)
     Title.Name = "Title"
     Title.Parent = Topbar
     Title.BackgroundTransparency = 1
-    Title.Position = UDim2.new(0, 53, 0, 8)
-    Title.Size = UDim2.new(0, 200, 0, 20)
+    Title.Position = UDim2.new(0, 58, 0, 10) -- Adjusted position
+    Title.Size = UDim2.new(0, 250, 0, 20)
     Title.Font = Enum.Font.GothamBold
     Title.Text = config.Title
-    Title.TextSize = 14
+    Title.TextSize = 15 -- Slightly larger text
     Title.TextXAlignment = Enum.TextXAlignment.Left
 
     -- Description
@@ -233,11 +232,11 @@ function EyeUI:CreateWindow(config)
     Description.Name = "Description"
     Description.Parent = Topbar
     Description.BackgroundTransparency = 1
-    Description.Position = UDim2.new(0, 53, 0, 23)
-    Description.Size = UDim2.new(0, 200, 0, 20)
-    Description.Font = Enum.Font.GothamBold
+    Description.Position = UDim2.new(0, 58, 0, 28) -- Adjusted position
+    Description.Size = UDim2.new(0, 250, 0, 20)
+    Description.Font = Enum.Font.GothamMedium -- Slightly less bold
     Description.Text = config.Description
-    Description.TextSize = 12
+    Description.TextSize = 13 -- Slightly larger text
     Description.TextXAlignment = Enum.TextXAlignment.Left
 
     -- Close Button
@@ -245,8 +244,8 @@ function EyeUI:CreateWindow(config)
     Close.Name = "Close"
     Close.Parent = Topbar
     Close.BackgroundTransparency = 1
-    Close.Position = UDim2.new(1, -45, 0, 7)
-    Close.Size = UDim2.new(0, 35, 0, 37)
+    Close.Position = UDim2.new(1, -48, 0, 10) -- Adjusted position
+    Close.Size = UDim2.new(0, 38, 0, 38) -- Slightly larger buttons
     Close.Font = Enum.Font.SourceSans
     Close.Text = ""
     Close.TextSize = 14
@@ -255,9 +254,9 @@ function EyeUI:CreateWindow(config)
     CloseIcon.Name = "CloseIcon"
     CloseIcon.Parent = Close
     CloseIcon.BackgroundTransparency = 1
-    CloseIcon.Position = UDim2.new(0.5, -11, 0.5, -11)
-    CloseIcon.Size = UDim2.new(0, 22, 0, 22)
-    CloseIcon.Image = getLucideIcon("close") -- Using Lucide icon
+    CloseIcon.Position = UDim2.new(0.5, -10, 0.5, -10) -- Centered icon
+    CloseIcon.Size = UDim2.new(0, 20, 0, 20) -- Icon size
+    CloseIcon.Image = getLucideIcon("close")
 
     local CloseCorner = Instance.new("UICorner")
     CloseCorner.CornerRadius = UDim.new(0, 8)
@@ -268,8 +267,8 @@ function EyeUI:CreateWindow(config)
     Minimize.Name = "Minimize"
     Minimize.Parent = Topbar
     Minimize.BackgroundTransparency = 1
-    Minimize.Position = UDim2.new(1, -80, 0, 7)
-    Minimize.Size = UDim2.new(0, 29, 0, 37)
+    Minimize.Position = UDim2.new(1, -90, 0, 10) -- Adjusted position
+    Minimize.Size = UDim2.new(0, 38, 0, 38)
     Minimize.Font = Enum.Font.SourceSans
     Minimize.Text = ""
     Minimize.TextSize = 14
@@ -278,33 +277,32 @@ function EyeUI:CreateWindow(config)
     MinimizeIcon.Name = "MinimizeIcon"
     MinimizeIcon.Parent = Minimize
     MinimizeIcon.BackgroundTransparency = 1
-    MinimizeIcon.Position = UDim2.new(0.5, -11, 0.5, -11)
-    MinimizeIcon.Size = UDim2.new(0, 22, 0, 22)
-    MinimizeIcon.Image = getLucideIcon("minimize") -- Using Lucide icon
+    MinimizeIcon.Position = UDim2.new(0.5, -10, 0.5, -10)
+    MinimizeIcon.Size = UDim2.new(0, 20, 0, 20)
+    MinimizeIcon.Image = getLucideIcon("minimize")
 
     local MinimizeCorner = Instance.new("UICorner")
     MinimizeCorner.CornerRadius = UDim.new(0, 8)
     MinimizeCorner.Parent = Minimize
 
-    -- Tabs Container
+    -- Tab Container
     local TabsContainer = Instance.new("Frame")
     TabsContainer.Name = "TabsContainer"
     TabsContainer.Parent = Main
     TabsContainer.BackgroundTransparency = 1
-    TabsContainer.Position = UDim2.new(0, 0, 0, 51)
-    TabsContainer.Size = UDim2.new(0, 145, 1, -51)
+    TabsContainer.Position = UDim2.new(0, 0, 0, 55)
+    TabsContainer.Size = UDim2.new(0, 160, 1, -55) -- Wider tab container
 
     -- Tab Search Bar
     local TabSearchFrame = Instance.new("Frame")
     TabSearchFrame.Name = "TabSearchFrame"
     TabSearchFrame.Parent = TabsContainer
-    TabSearchFrame.BackgroundColor3 = Color3.fromRGB(30,30,30)
     TabSearchFrame.BorderSizePixel = 0
-    TabSearchFrame.Size = UDim2.new(1, -10, 0, 30)
-    TabSearchFrame.Position = UDim2.new(0, 5, 0, 5)
+    TabSearchFrame.Size = UDim2.new(1, -20, 0, 35) -- Slightly taller search bar
+    TabSearchFrame.Position = UDim2.new(0, 10, 0, 10) -- More padding
 
     local TabSearchCorner = Instance.new("UICorner")
-    TabSearchCorner.CornerRadius = UDim.new(0, 8)
+    TabSearchCorner.CornerRadius = UDim.new(0, 10) -- Rounded corners for search
     TabSearchCorner.Parent = TabSearchFrame
 
     local TabSearchIcon = Instance.new("ImageLabel")
@@ -312,77 +310,77 @@ function EyeUI:CreateWindow(config)
     TabSearchIcon.Parent = TabSearchFrame
     TabSearchIcon.BackgroundTransparency = 1
     TabSearchIcon.Image = getLucideIcon("search")
-    TabSearchIcon.Size = UDim2.new(0, 18, 0, 18)
-    TabSearchIcon.Position = UDim2.new(0, 5, 0.5, -9)
+    TabSearchIcon.Size = UDim2.new(0, 20, 0, 20) -- Larger icon
+    TabSearchIcon.Position = UDim2.new(0, 8, 0.5, -10) -- Adjusted icon position
 
     local TabSearchBox = Instance.new("TextBox")
     TabSearchBox.Name = "TabSearchBox"
     TabSearchBox.Parent = TabSearchFrame
-    TabSearchBox.BackgroundColor3 = Color3.fromRGB(30,30,30)
     TabSearchBox.BackgroundTransparency = 1
     TabSearchBox.BorderSizePixel = 0
-    TabSearchBox.Size = UDim2.new(1, -30, 1, 0)
-    TabSearchBox.Position = UDim2.new(0, 28, 0, 0)
+    TabSearchBox.Size = UDim2.new(1, -40, 1, 0) -- Adjusted size for text
+    TabSearchBox.Position = UDim2.new(0, 35, 0, 0)
     TabSearchBox.PlaceholderText = "Search tabs..."
     TabSearchBox.Font = Enum.Font.Gotham
     TabSearchBox.TextSize = 14
     TabSearchBox.TextXAlignment = Enum.TextXAlignment.Left
     TabSearchBox.ClearTextOnFocus = false
+    TabSearchBox.TextWrapped = true
 
     local TabsScrolling = Instance.new("ScrollingFrame")
     TabsScrolling.Parent = TabsContainer
     TabsScrolling.Active = true
     TabsScrolling.BackgroundTransparency = 1
     TabsScrolling.BorderSizePixel = 0
-    TabsScrolling.Position = UDim2.new(0, 5, 0, 40) -- Adjusted position for search bar
-    TabsScrolling.Size = UDim2.new(0, 140, 1, -40) -- Adjusted size
+    TabsScrolling.Position = UDim2.new(0, 10, 0, 55) -- Adjusted position for search bar
+    TabsScrolling.Size = UDim2.new(0, 140, 1, -65) -- Adjusted size with more vertical padding
     TabsScrolling.ScrollBarThickness = 0
     TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, 0)
 
     local TabsLayout = Instance.new("UIListLayout")
     TabsLayout.Parent = TabsScrolling
     TabsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    TabsLayout.Padding = UDim.new(0, 2)
+    TabsLayout.Padding = UDim.new(0, 5) -- Increased padding between tabs
 
     -- Content Container
     local ContentContainer = Instance.new("Frame")
     ContentContainer.Name = "ContentContainer"
     ContentContainer.Parent = Main
     ContentContainer.BackgroundTransparency = 1
-    ContentContainer.Position = UDim2.new(0, 155, 0, 58)
-    ContentContainer.Size = UDim2.new(1, -165, 1, -68)
+    ContentContainer.Position = UDim2.new(0, 170, 0, 65) -- Adjusted position
+    ContentContainer.Size = UDim2.new(1, -185, 1, -80) -- Adjusted size with more padding
 
-    -- Bottom Drag Bar (New Element)
+    -- Bottom Drag Bar
     local BottomDragBar = Instance.new("Frame")
     BottomDragBar.Name = "BottomDragBar"
     BottomDragBar.Parent = Main
-    BottomDragBar.BackgroundTransparency = 0.5 -- Slightly transparent
+    BottomDragBar.BackgroundTransparency = 0.8 -- More opaque
     BottomDragBar.BorderSizePixel = 0
-    BottomDragBar.Position = UDim2.new(0.5, -100, 1, -20) -- Centered at bottom, 20px from bottom edge
-    BottomDragBar.Size = UDim2.new(0, 200, 0, 15) -- Width 200, Height 15
-    BottomDragBar.Active = true -- Make it active to receive input
+    BottomDragBar.Position = UDim2.new(0.5, -80, 1, -25) -- Slightly higher and smaller
+    BottomDragBar.Size = UDim2.new(0, 160, 0, 10) -- Thinner bar
+    BottomDragBar.Active = true
 
     local BottomDragBarCorner = Instance.new("UICorner")
-    BottomDragBarCorner.CornerRadius = UDim.new(1, 0) -- Fully rounded corners
+    BottomDragBarCorner.CornerRadius = UDim.new(1, 0)
     BottomDragBarCorner.Parent = BottomDragBar
 
-    local DragHandle = Instance.new("ImageLabel") -- Using ImageLabel for a grip icon
+    local DragHandle = Instance.new("ImageLabel")
     DragHandle.Name = "DragHandle"
     DragHandle.Parent = BottomDragBar
     DragHandle.BackgroundTransparency = 1
-    DragHandle.Image = getLucideIcon("grip-horizontal") -- Lucide grip icon
-    DragHandle.Size = UDim2.new(0, 24, 0, 24) -- Icon size
+    DragHandle.Image = getLucideIcon("grip-horizontal")
+    DragHandle.Size = UDim2.new(0, 20, 0, 20) -- Smaller icon
     DragHandle.AnchorPoint = Vector2.new(0.5, 0.5)
-    DragHandle.Position = UDim2.new(0.5, 0, 0.5, 0) -- Centered within the bar
-    DragHandle.ZIndex = 2 -- Ensure it's visible
+    DragHandle.Position = UDim2.new(0.5, 0, 0.5, 0)
+    DragHandle.ZIndex = 2
 
     -- Show Prompt (for minimized state)
     local ShowPrompt = Instance.new("Frame")
     ShowPrompt.Name = "ShowPrompt"
     ShowPrompt.Parent = ScreenGui
     ShowPrompt.BorderSizePixel = 0
-    ShowPrompt.Position = UDim2.new(0.5, -60, 0, 20)
-    ShowPrompt.Size = UDim2.new(0, 120, 0, 30)
+    ShowPrompt.Position = UDim2.new(0.5, -75, 0, 20) -- Larger prompt
+    ShowPrompt.Size = UDim2.new(0, 150, 0, 40)
     ShowPrompt.Visible = false
 
     local PromptCorner = Instance.new("UICorner")
@@ -397,8 +395,8 @@ function EyeUI:CreateWindow(config)
     PromptTitle.Size = UDim2.new(1, 0, 1, 0)
     PromptTitle.Font = Enum.Font.GothamBold
     PromptTitle.Text = "Show " .. config.Title
-    PromptTitle.TextSize = 14
-    PromptTitle.TextTransparency = 0.3
+    PromptTitle.TextSize = 15 -- Consistent text size
+    PromptTitle.TextTransparency = 0.2 -- Slightly less transparent
 
     local PromptButton = Instance.new("TextButton")
     PromptButton.Name = "PromptButton"
@@ -413,15 +411,15 @@ function EyeUI:CreateWindow(config)
     NotificationsContainer.Name = "Notifications"
     NotificationsContainer.Parent = ScreenGui
     NotificationsContainer.BackgroundTransparency = 1
-    NotificationsContainer.Position = UDim2.new(1, -320, 1, -20)
-    NotificationsContainer.Size = UDim2.new(0, 300, 0, 800)
+    NotificationsContainer.Position = UDim2.new(1, -330, 1, -20) -- Adjusted position
+    NotificationsContainer.Size = UDim2.new(0, 300, 0, 800) -- Fixed width for notifications
 
     local NotificationsLayout = Instance.new("UIListLayout")
     NotificationsLayout.Parent = NotificationsContainer
     NotificationsLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
     NotificationsLayout.SortOrder = Enum.SortOrder.LayoutOrder
     NotificationsLayout.VerticalAlignment = Enum.VerticalAlignment.Bottom
-    NotificationsLayout.Padding = UDim.new(0, 8)
+    NotificationsLayout.Padding = UDim.new(0, 10) -- More padding between notifications
 
     -- Window Variables
     Window.ScreenGui = ScreenGui
@@ -446,7 +444,7 @@ function EyeUI:CreateWindow(config)
                 isDragging = true
                 dragStart = UserInputService:GetMouseLocation()
                 startPos = targetFrame.Position
-                UserInputService.MouseIconEnabled = false -- Hide mouse icon during drag
+                UserInputService.MouseIconEnabled = false
                 UserInputService.MouseIcon = "rbxassetid://6057088191" -- Custom drag icon (hand icon)
             end
         end)
@@ -461,17 +459,15 @@ function EyeUI:CreateWindow(config)
         UserInputService.InputEnded:Connect(function(input)
             if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
                 isDragging = false
-                UserInputService.MouseIconEnabled = true -- Restore default mouse icon
-                UserInputService.MouseIcon = "" -- Clear custom icon
+                UserInputService.MouseIconEnabled = true
+                UserInputService.MouseIcon = ""
             end
         end)
     end
 
-    -- Apply draggable to Topbar
+    -- Apply draggable to Topbar and BottomDragBar
     makeDraggable(Topbar, Main)
-    -- Apply draggable to BottomDragBar
     makeDraggable(BottomDragBar, Main)
-
 
     -- Window Functions
     function Window:CreateTab(config)
@@ -480,14 +476,14 @@ function EyeUI:CreateWindow(config)
 
         config = config or {}
         config.Title = config.Title or "Tab"
-        config.Icon = config.Icon or "default" -- Use Lucide icon name
+        config.Icon = config.Icon or "default"
 
         -- Tab Button
         local TabButton = Instance.new("Frame")
         TabButton.Name = "TabButton"
         TabButton.Parent = self.TabsScrolling
         TabButton.BackgroundTransparency = 1
-        TabButton.Size = UDim2.new(1, -10, 0, 37)
+        TabButton.Size = UDim2.new(1, -10, 0, 40) -- Slightly taller tab buttons
 
         -- Tab Selector
         local TabSelector = Instance.new("Frame")
@@ -506,17 +502,17 @@ function EyeUI:CreateWindow(config)
         TabIcon.Name = "TabIcon"
         TabIcon.Parent = TabButton
         TabIcon.BackgroundTransparency = 1
-        TabIcon.Position = UDim2.new(0, 14, 0.5, -8)
-        TabIcon.Size = UDim2.new(0, 17, 0, 17)
+        TabIcon.Position = UDim2.new(0, 18, 0.5, -10) -- Adjusted icon position
+        TabIcon.Size = UDim2.new(0, 20, 0, 20) -- Slightly larger icon
         TabIcon.Image = getLucideIcon(config.Icon)
 
         local TabTitle = Instance.new("TextLabel")
         TabTitle.Name = "TextLabel"
         TabTitle.Parent = TabButton
         TabTitle.BackgroundTransparency = 1
-        TabTitle.Position = UDim2.new(0, 39, 0, 5)
-        TabTitle.Size = UDim2.new(0, 96, 0, 27)
-        TabTitle.Font = Enum.Font.GothamBold
+        TabTitle.Position = UDim2.new(0, 48, 0, 5) -- Adjusted text position
+        TabTitle.Size = UDim2.new(0, 100, 0, 30)
+        TabTitle.Font = Enum.Font.GothamMedium -- Less bold, more readable
         TabTitle.Text = config.Title
         TabTitle.TextSize = 14
         TabTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -545,7 +541,7 @@ function EyeUI:CreateWindow(config)
         local ContentLayout = Instance.new("UIListLayout")
         ContentLayout.Parent = TabContent
         ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        ContentLayout.Padding = UDim.new(0, 8)
+        ContentLayout.Padding = UDim.new(0, 10) -- Increased padding for content elements
 
         local ContentPadding = Instance.new("UIPadding")
         ContentPadding.Parent = TabContent
@@ -562,15 +558,15 @@ function EyeUI:CreateWindow(config)
         Tab.Window = self
         Tab.Title = config.Title
         Tab.Icon = config.Icon
-        Tab.TabTitleLabel = TabTitle -- Store reference to the label for theme/search updates
+        Tab.TabTitleLabel = TabTitle
 
         -- Tab Functions
         function Tab:Select()
-            -- Hide all tabs and animate their selectors out
             for _, tab in pairs(self.Window.Tabs) do
                 tab.TabContent.Visible = false
                 if tab ~= self then
-                    local tweenOut = TweenService:Create(tab.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+                    -- Animate selector out (slightly faster, Quad ease)
+                    local tweenOut = TweenService:Create(tab.TabSelector, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {
                         Size = UDim2.new(0, 0, 0, 20),
                         Position = UDim2.new(0, 0, 0.5, -10)
                     })
@@ -580,16 +576,15 @@ function EyeUI:CreateWindow(config)
                 end
             end
 
-            -- Show this tab
             self.TabContent.Visible = true
             self.TabSelector.Visible = true
 
-            -- Animate selector in with slide effect
-            local tweenSize = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
-                Size = UDim2.new(0, 3, 0, 20)
+            -- Animate selector in with slight overshoot (Back ease)
+            local tweenSize = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
+                Size = UDim2.new(0, 5, 0, 20) -- Slightly thicker selector
             })
 
-            local tweenPos = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Quad), {
+            local tweenPos = TweenService:Create(self.TabSelector, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {
                 Position = UDim2.new(0, 5, 0.5, -10)
             })
 
@@ -599,9 +594,8 @@ function EyeUI:CreateWindow(config)
             self.Window.CurrentTab = self
         end
 
-        -- Generic function to update canvas size of the current tab's content
         local function updateTabCanvasSize()
-            TabContent.CanvasSize = UDim2.new(0, 0, 0, ContentLayout.AbsoluteContentSize.Y)
+            TabContent.CanvasSize = UDim2.new(0, 0, 0, ContentLayout.AbsoluteContentSize.Y + ContentLayout.Padding.Offset) -- Account for padding
         end
 
         function Tab:CreateButton(config)
@@ -613,14 +607,22 @@ function EyeUI:CreateWindow(config)
             Button.Name = "Button"
             Button.Parent = self.TabContent
             Button.BorderSizePixel = 0
-            Button.Size = UDim2.new(1, 0, 0, 40)
+            Button.Size = UDim2.new(1, 0, 0, 45) -- Taller buttons
             Button.Font = Enum.Font.GothamBold
             Button.Text = config.Title
-            Button.TextSize = 14
+            Button.TextSize = 15 -- Consistent text size
 
             local ButtonCorner = Instance.new("UICorner")
-            ButtonCorner.CornerRadius = UDim.new(0, 8)
+            ButtonCorner.CornerRadius = UDim.new(0, 10) -- More rounded
             ButtonCorner.Parent = Button
+
+            -- Hover effect
+            Button.MouseEnter:Connect(function()
+                TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ButtonHover}):Play()
+            end)
+            Button.MouseLeave:Connect(function()
+                TweenService:Create(Button, TweenInfo.new(0.15), {BackgroundColor3 = CurrentTheme.ElementBackground}):Play()
+            end)
 
             Button.MouseButton1Click:Connect(config.Callback)
 
@@ -639,10 +641,10 @@ function EyeUI:CreateWindow(config)
             Toggle.Name = "Toggle"
             Toggle.Parent = self.TabContent
             Toggle.BorderSizePixel = 0
-            Toggle.Size = UDim2.new(1, 0, 0, 40)
+            Toggle.Size = UDim2.new(1, 0, 0, 45) -- Taller toggle
 
             local ToggleCorner = Instance.new("UICorner")
-            ToggleCorner.CornerRadius = UDim.new(0, 8)
+            ToggleCorner.CornerRadius = UDim.new(0, 10)
             ToggleCorner.Parent = Toggle
 
             local ToggleTitle = Instance.new("TextLabel")
@@ -650,8 +652,8 @@ function EyeUI:CreateWindow(config)
             ToggleTitle.Parent = Toggle
             ToggleTitle.BackgroundTransparency = 1
             ToggleTitle.Position = UDim2.new(0, 15, 0, 0)
-            ToggleTitle.Size = UDim2.new(1, -60, 1, 0)
-            ToggleTitle.Font = Enum.Font.GothamBold
+            ToggleTitle.Size = UDim2.new(1, -70, 1, 0) -- More room for toggle button
+            ToggleTitle.Font = Enum.Font.GothamMedium
             ToggleTitle.Text = config.Title
             ToggleTitle.TextSize = 14
             ToggleTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -660,8 +662,8 @@ function EyeUI:CreateWindow(config)
             ToggleButton.Name = "ToggleButton"
             ToggleButton.Parent = Toggle
             ToggleButton.BorderSizePixel = 0
-            ToggleButton.Position = UDim2.new(1, -45, 0.5, -10)
-            ToggleButton.Size = UDim2.new(0, 35, 0, 20)
+            ToggleButton.Position = UDim2.new(1, -55, 0.5, -12) -- Adjusted position
+            ToggleButton.Size = UDim2.new(0, 40, 0, 24) -- Wider toggle button
             ToggleButton.Text = ""
 
             local ToggleButtonCorner = Instance.new("UICorner")
@@ -672,8 +674,8 @@ function EyeUI:CreateWindow(config)
             ToggleIndicator.Name = "ToggleIndicator"
             ToggleIndicator.Parent = ToggleButton
             ToggleIndicator.BorderSizePixel = 0
-            ToggleIndicator.Position = UDim2.new(0, 2, 0, 2)
-            ToggleIndicator.Size = UDim2.new(0, 16, 0, 16)
+            ToggleIndicator.Position = UDim2.new(0, 3, 0, 3) -- Adjusted padding
+            ToggleIndicator.Size = UDim2.new(0, 18, 0, 18) -- Larger indicator
 
             local IndicatorCorner = Instance.new("UICorner")
             IndicatorCorner.CornerRadius = UDim.new(1, 0)
@@ -683,11 +685,11 @@ function EyeUI:CreateWindow(config)
 
             local function UpdateToggleState()
                 if isToggled then
-                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.2), {Position = UDim2.new(0, 17, 0, 2)}):Play()
-                    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = CurrentTheme.AccentColor}):Play()
+                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Position = UDim2.new(0, 19, 0, 3)}):Play()
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = CurrentTheme.AccentColor}):Play()
                 else
-                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.2), {Position = UDim2.new(0, 2, 0, 2)}):Play()
-                    TweenService:Create(ToggleButton, TweenInfo.new(0.2), {BackgroundColor3 = CurrentTheme.InputBackground}):Play()
+                    TweenService:Create(ToggleIndicator, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Position = UDim2.new(0, 3, 0, 3)}):Play()
+                    TweenService:Create(ToggleButton, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {BackgroundColor3 = CurrentTheme.InputBackground}):Play()
                 end
             end
 
@@ -697,7 +699,7 @@ function EyeUI:CreateWindow(config)
                 config.Callback(isToggled)
             end)
 
-            UpdateToggleState() -- Set initial state
+            UpdateToggleState()
 
             updateTabCanvasSize()
 
@@ -715,19 +717,19 @@ function EyeUI:CreateWindow(config)
             InputFrame.Name = "InputFrame"
             InputFrame.Parent = self.TabContent
             InputFrame.BorderSizePixel = 0
-            InputFrame.Size = UDim2.new(1, 0, 0, 60)
+            InputFrame.Size = UDim2.new(1, 0, 0, 70) -- Taller input frame
 
             local InputCorner = Instance.new("UICorner")
-            InputCorner.CornerRadius = UDim.new(0, 8)
+            InputCorner.CornerRadius = UDim.new(0, 10)
             InputCorner.Parent = InputFrame
 
             local InputTitle = Instance.new("TextLabel")
             InputTitle.Name = "TextLabel"
             InputTitle.Parent = InputFrame
             InputTitle.BackgroundTransparency = 1
-            InputTitle.Position = UDim2.new(0, 15, 0, 5)
+            InputTitle.Position = UDim2.new(0, 15, 0, 8) -- Adjusted title position
             InputTitle.Size = UDim2.new(1, -30, 0, 20)
-            InputTitle.Font = Enum.Font.GothamBold
+            InputTitle.Font = Enum.Font.GothamMedium
             InputTitle.Text = config.Title
             InputTitle.TextSize = 14
             InputTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -736,17 +738,18 @@ function EyeUI:CreateWindow(config)
             TextBox.Name = "TextBox"
             TextBox.Parent = InputFrame
             TextBox.BorderSizePixel = 0
-            TextBox.Position = UDim2.new(0, 15, 0, 28)
-            TextBox.Size = UDim2.new(1, -30, 0, 25)
+            TextBox.Position = UDim2.new(0, 15, 0, 35) -- Adjusted text box position
+            TextBox.Size = UDim2.new(1, -30, 0, 30) -- Taller text box
             TextBox.Font = Enum.Font.Gotham
             TextBox.Text = config.Default
             TextBox.PlaceholderText = config.Placeholder
             TextBox.TextSize = 14
             TextBox.TextXAlignment = Enum.TextXAlignment.Left
             TextBox.ClearTextOnFocus = false
+            TextBox.TextWrapped = true
 
             local TextBoxCorner = Instance.new("UICorner")
-            TextBoxCorner.CornerRadius = UDim.new(0, 5)
+            TextBoxCorner.CornerRadius = UDim.new(0, 8) -- Slightly less rounded than frame
             TextBoxCorner.Parent = TextBox
 
             TextBox.FocusLost:Connect(function(enterPressed)
@@ -771,19 +774,19 @@ function EyeUI:CreateWindow(config)
             DropdownFrame.Name = "DropdownFrame"
             DropdownFrame.Parent = self.TabContent
             DropdownFrame.BorderSizePixel = 0
-            DropdownFrame.Size = UDim2.new(1, 0, 0, 60)
+            DropdownFrame.Size = UDim2.new(1, 0, 0, 70) -- Taller dropdown frame
 
             local DropdownCorner = Instance.new("UICorner")
-            DropdownCorner.CornerRadius = UDim.new(0, 8)
+            DropdownCorner.CornerRadius = UDim.new(0, 10)
             DropdownCorner.Parent = DropdownFrame
 
             local DropdownTitle = Instance.new("TextLabel")
             DropdownTitle.Name = "TextLabel"
             DropdownTitle.Parent = DropdownFrame
             DropdownTitle.BackgroundTransparency = 1
-            DropdownTitle.Position = UDim2.new(0, 15, 0, 5)
+            DropdownTitle.Position = UDim2.new(0, 15, 0, 8)
             DropdownTitle.Size = UDim2.new(1, -30, 0, 20)
-            DropdownTitle.Font = Enum.Font.GothamBold
+            DropdownTitle.Font = Enum.Font.GothamMedium
             DropdownTitle.Text = config.Title
             DropdownTitle.TextSize = 14
             DropdownTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -792,15 +795,16 @@ function EyeUI:CreateWindow(config)
             DropdownButton.Name = "DropdownButton"
             DropdownButton.Parent = DropdownFrame
             DropdownButton.BorderSizePixel = 0
-            DropdownButton.Position = UDim2.new(0, 15, 0, 28)
-            DropdownButton.Size = UDim2.new(1, -30, 0, 25)
+            DropdownButton.Position = UDim2.new(0, 15, 0, 35)
+            DropdownButton.Size = UDim2.new(1, -30, 0, 30)
             DropdownButton.Font = Enum.Font.Gotham
             DropdownButton.Text = config.Default
             DropdownButton.TextSize = 14
             DropdownButton.TextXAlignment = Enum.TextXAlignment.Left
+            DropdownButton.TextWrapped = true
 
             local DropdownButtonCorner = Instance.new("UICorner")
-            DropdownButtonCorner.CornerRadius = UDim.new(0, 5)
+            DropdownButtonCorner.CornerRadius = UDim.new(0, 8)
             DropdownButtonCorner.Parent = DropdownButton
 
             local ArrowIcon = Instance.new("ImageLabel")
@@ -808,38 +812,42 @@ function EyeUI:CreateWindow(config)
             ArrowIcon.Parent = DropdownButton
             ArrowIcon.BackgroundTransparency = 1
             ArrowIcon.AnchorPoint = Vector2.new(1, 0.5)
-            ArrowIcon.Position = UDim2.new(1, -10, 0.5, 0)
-            ArrowIcon.Size = UDim2.new(0, 16, 0, 16)
-            ArrowIcon.Image = getLucideIcon("minimize") -- Using minimize icon as a down arrow placeholder (consider "chevron-down")
+            ArrowIcon.Position = UDim2.new(1, -12, 0.5, 0)
+            ArrowIcon.Size = UDim2.new(0, 18, 0, 18) -- Larger arrow icon
+            ArrowIcon.Image = getLucideIcon("chevron-down") -- Specific chevron icon
 
             local OptionsFrame = Instance.new("Frame")
             OptionsFrame.Name = "OptionsFrame"
             OptionsFrame.Parent = DropdownFrame
             OptionsFrame.BorderSizePixel = 0
-            OptionsFrame.Position = UDim2.new(0, 15, 0, 53)
+            OptionsFrame.Position = UDim2.new(0, 15, 0, 65) -- Position below button
             OptionsFrame.Size = UDim2.new(1, -30, 0, 0)
             OptionsFrame.Visible = false
             OptionsFrame.ZIndex = DropdownButton.ZIndex + 1
-            OptionsFrame.ClipsDescendants = true -- Important for smooth expansion/collapse
+            OptionsFrame.ClipsDescendants = true
+
+            local OptionsCorner = Instance.new("UICorner") -- Added corner for options frame
+            OptionsCorner.CornerRadius = UDim.new(0, 8)
+            OptionsCorner.Parent = OptionsFrame
 
             local OptionsLayout = Instance.new("UIListLayout")
             OptionsLayout.Parent = OptionsFrame
             OptionsLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            OptionsLayout.Padding = UDim.new(0, 2)
+            OptionsLayout.Padding = UDim.new(0, 3) -- Slightly more padding
 
             local isExpanded = false
 
             local function ToggleDropdown()
                 isExpanded = not isExpanded
                 if isExpanded then
-                    local targetHeight = #config.Options * 27 -- 25 height + 2 padding
+                    local targetHeight = #config.Options * 30 -- 27 height + 3 padding
                     OptionsFrame.Visible = true
-                    TweenService:Create(OptionsFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Size = UDim2.new(1, -30, 0, targetHeight)}):Play()
-                    TweenService:Create(ArrowIcon, TweenInfo.new(0.2), {Rotation = 180}):Play()
+                    TweenService:Create(OptionsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {Size = UDim2.new(1, -30, 0, targetHeight)}):Play()
+                    TweenService:Create(ArrowIcon, TweenInfo.new(0.25), {Rotation = 180}):Play()
                 else
-                    TweenService:Create(OptionsFrame, TweenInfo.new(0.2, Enum.EasingStyle.Quad), {Size = UDim2.new(1, -30, 0, 0)}):Play()
-                    TweenService:Create(ArrowIcon, TweenInfo.new(0.2), {Rotation = 0}):Play()
-                    task.delay(0.2, function() OptionsFrame.Visible = false end)
+                    TweenService:Create(OptionsFrame, TweenInfo.new(0.25, Enum.EasingStyle.Quad), {Size = UDim2.new(1, -30, 0, 0)}):Play()
+                    TweenService:Create(ArrowIcon, TweenInfo.new(0.25), {Rotation = 0}):Play()
+                    task.delay(0.25, function() OptionsFrame.Visible = false end)
                 end
             end
 
@@ -850,7 +858,7 @@ function EyeUI:CreateWindow(config)
                 OptionButton.Name = "OptionButton"
                 OptionButton.Parent = OptionsFrame
                 OptionButton.BorderSizePixel = 0
-                OptionButton.Size = UDim2.new(1, 0, 0, 25)
+                OptionButton.Size = UDim2.new(1, 0, 0, 27) -- Taller option buttons
                 OptionButton.Font = Enum.Font.Gotham
                 OptionButton.Text = optionText
                 OptionButton.TextSize = 13
@@ -861,7 +869,14 @@ function EyeUI:CreateWindow(config)
 
                 local OptionPadding = Instance.new("UIPadding")
                 OptionPadding.Parent = OptionButton
-                OptionPadding.PaddingLeft = UDim.new(0, 5)
+                OptionPadding.PaddingLeft = UDim.new(0, 8) -- More padding
+
+                OptionButton.MouseEnter:Connect(function()
+                    TweenService:Create(OptionButton, TweenInfo.new(0.1), {BackgroundColor3 = CurrentTheme.ButtonHover}):Play()
+                end)
+                OptionButton.MouseLeave:Connect(function()
+                    TweenService:Create(OptionButton, TweenInfo.new(0.1), {BackgroundColor3 = CurrentTheme.ElementBackground}):Play()
+                end)
 
                 OptionButton.MouseButton1Click:Connect(function()
                     DropdownButton.Text = optionText
@@ -888,19 +903,19 @@ function EyeUI:CreateWindow(config)
             SliderFrame.Name = "SliderFrame"
             SliderFrame.Parent = self.TabContent
             SliderFrame.BorderSizePixel = 0
-            SliderFrame.Size = UDim2.new(1, 0, 0, 60)
+            SliderFrame.Size = UDim2.new(1, 0, 0, 70) -- Taller slider frame
 
             local SliderCorner = Instance.new("UICorner")
-            SliderCorner.CornerRadius = UDim.new(0, 8)
+            SliderCorner.CornerRadius = UDim.new(0, 10)
             SliderCorner.Parent = SliderFrame
 
             local SliderTitle = Instance.new("TextLabel")
             SliderTitle.Name = "TextLabel"
             SliderTitle.Parent = SliderFrame
             SliderTitle.BackgroundTransparency = 1
-            SliderTitle.Position = UDim2.new(0, 15, 0, 5)
-            SliderTitle.Size = UDim2.new(1, -30, 0, 20)
-            SliderTitle.Font = Enum.Font.GothamBold
+            SliderTitle.Position = UDim2.new(0, 15, 0, 8)
+            SliderTitle.Size = UDim2.new(1, -80, 0, 20) -- More space for value label
+            SliderTitle.Font = Enum.Font.GothamMedium
             SliderTitle.Text = config.Title
             SliderTitle.TextSize = 14
             SliderTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -909,8 +924,8 @@ function EyeUI:CreateWindow(config)
             ValueLabel.Name = "TextLabel"
             ValueLabel.Parent = SliderFrame
             ValueLabel.BackgroundTransparency = 1
-            ValueLabel.Position = UDim2.new(1, -70, 0, 5)
-            ValueLabel.Size = UDim2.new(0, 55, 0, 20)
+            ValueLabel.Position = UDim2.new(1, -75, 0, 8) -- Adjusted position
+            ValueLabel.Size = UDim2.new(0, 60, 0, 20)
             ValueLabel.Font = Enum.Font.Gotham
             ValueLabel.TextSize = 14
             ValueLabel.TextXAlignment = Enum.TextXAlignment.Right
@@ -919,8 +934,8 @@ function EyeUI:CreateWindow(config)
             SliderBackground.Name = "SliderBackground"
             SliderBackground.Parent = SliderFrame
             SliderBackground.BorderSizePixel = 0
-            SliderBackground.Position = UDim2.new(0, 15, 0, 38)
-            SliderBackground.Size = UDim2.new(1, -30, 0, 5)
+            SliderBackground.Position = UDim2.new(0, 15, 0, 42) -- Adjusted position
+            SliderBackground.Size = UDim2.new(1, -30, 0, 6) -- Slightly thicker track
 
             local SliderBackgroundCorner = Instance.new("UICorner")
             SliderBackgroundCorner.CornerRadius = UDim.new(1, 0)
@@ -940,7 +955,7 @@ function EyeUI:CreateWindow(config)
             SliderThumb.Name = "SliderThumb"
             SliderThumb.Parent = SliderBackground
             SliderThumb.BorderSizePixel = 0
-            SliderThumb.Size = UDim2.new(0, 16, 0, 16)
+            SliderThumb.Size = UDim2.new(0, 18, 0, 18) -- Larger thumb
             SliderThumb.AnchorPoint = Vector2.new(0.5, 0.5)
             SliderThumb.Position = UDim2.new(0, 0, 0.5, 0)
             SliderThumb.ZIndex = SliderBackground.ZIndex + 1
@@ -950,7 +965,7 @@ function EyeUI:CreateWindow(config)
             ThumbCorner.Parent = SliderThumb
 
             local CurrentValue = config.Default
-            local isDraggingSlider = false -- Renamed to avoid conflict with window dragging
+            local isDraggingSlider = false
 
             local function UpdateSlider(inputPos)
                 local relativeX = math.clamp(inputPos.X - SliderBackground.AbsolutePosition.X, 0, SliderBackground.AbsoluteSize.X)
@@ -960,13 +975,14 @@ function EyeUI:CreateWindow(config)
                 CurrentValue = math.clamp(CurrentValue, config.Min, config.Max)
 
                 local thumbPosition = (CurrentValue - config.Min) / (config.Max - config.Min)
-                SliderThumb.Position = UDim2.new(thumbPosition, 0, 0.5, 0)
-                SliderFill.Size = UDim2.new(thumbPosition, 0, 1, 0)
-                ValueLabel.Text = string.format("%.0f", CurrentValue) -- Format as integer if step is integer, or adjust as needed
+                TweenService:Create(SliderThumb, TweenInfo.new(0.05), {Position = UDim2.new(thumbPosition, 0, 0.5, 0)}):Play()
+                TweenService:Create(SliderFill, TweenInfo.new(0.05), {Size = UDim2.new(thumbPosition, 0, 1, 0)}):Play()
+
+                ValueLabel.Text = string.format("%.0f", CurrentValue)
                 config.Callback(CurrentValue)
             end
 
-            ValueLabel.Text = string.format("%.0f", CurrentValue) -- Initial value
+            ValueLabel.Text = string.format("%.0f", CurrentValue)
             local initialThumbPosition = (config.Default - config.Min) / (config.Max - config.Min)
             SliderThumb.Position = UDim2.new(initialThumbPosition, 0, 0.5, 0)
             SliderFill.Size = UDim2.new(initialThumbPosition, 0, 1, 0)
@@ -974,7 +990,7 @@ function EyeUI:CreateWindow(config)
             SliderThumb.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     isDraggingSlider = true
-                    UpdateSlider(input.Position) -- Update immediately on click
+                    UpdateSlider(input.Position)
                 end
             end)
 
@@ -990,7 +1006,7 @@ function EyeUI:CreateWindow(config)
                 end
             end)
 
-            SliderBackground.InputBegan:Connect(function(input) -- Allow clicking on the bar to set value
+            SliderBackground.InputBegan:Connect(function(input)
                 if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                     isDraggingSlider = true
                     UpdateSlider(input.Position)
@@ -1012,19 +1028,19 @@ function EyeUI:CreateWindow(config)
             ColorPickerFrame.Name = "ColorPickerFrame"
             ColorPickerFrame.Parent = self.TabContent
             ColorPickerFrame.BorderSizePixel = 0
-            ColorPickerFrame.Size = UDim2.new(1, 0, 0, 180)
+            ColorPickerFrame.Size = UDim2.new(1, 0, 0, 190) -- Taller frame
 
             local ColorPickerCorner = Instance.new("UICorner")
-            ColorPickerCorner.CornerRadius = UDim.new(0, 8)
+            ColorPickerCorner.CornerRadius = UDim.new(0, 10)
             ColorPickerCorner.Parent = ColorPickerFrame
 
             local ColorPickerTitle = Instance.new("TextLabel")
             ColorPickerTitle.Name = "TextLabel"
             ColorPickerTitle.Parent = ColorPickerFrame
             ColorPickerTitle.BackgroundTransparency = 1
-            ColorPickerTitle.Position = UDim2.new(0, 15, 0, 5)
+            ColorPickerTitle.Position = UDim2.new(0, 15, 0, 8)
             ColorPickerTitle.Size = UDim2.new(1, -30, 0, 20)
-            ColorPickerTitle.Font = Enum.Font.GothamBold
+            ColorPickerTitle.Font = Enum.Font.GothamMedium
             ColorPickerTitle.Text = config.Title
             ColorPickerTitle.TextSize = 14
             ColorPickerTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -1034,21 +1050,21 @@ function EyeUI:CreateWindow(config)
             CurrentColorPreview.Parent = ColorPickerFrame
             CurrentColorPreview.BackgroundColor3 = config.Default
             CurrentColorPreview.BorderSizePixel = 0
-            CurrentColorPreview.Position = UDim2.new(0, 15, 0, 28)
-            CurrentColorPreview.Size = UDim2.new(0, 30, 0, 30)
+            CurrentColorPreview.Position = UDim2.new(0, 15, 0, 35) -- Adjusted position
+            CurrentColorPreview.Size = UDim2.new(0, 35, 0, 35) -- Larger preview
 
             local PreviewCorner = Instance.new("UICorner")
-            PreviewCorner.CornerRadius = UDim.new(0, 5)
+            PreviewCorner.CornerRadius = UDim.new(0, 8)
             PreviewCorner.Parent = CurrentColorPreview
 
             local ColorWheel = Instance.new("ImageLabel")
             ColorWheel.Name = "ColorWheel"
             ColorWheel.Parent = ColorPickerFrame
             ColorWheel.BackgroundTransparency = 1
-            ColorWheel.Position = UDim2.new(0, 15, 0, 65)
+            ColorWheel.Position = UDim2.new(0, 15, 0, 75) -- Adjusted position
             ColorWheel.Size = UDim2.new(1, -30, 0, 100)
-            ColorWheel.Image = "rbxassetid://6022240974" -- Placeholder for a generic color wheel image. You'll likely need to create or find a better one.
-            ColorWheel.Active = true -- Make color wheel active for input
+            ColorWheel.Image = "rbxassetid://6022240974" -- Placeholder for a generic color wheel image.
+            ColorWheel.Active = true
 
             local ColorPickerThumb = Instance.new("Frame")
             ColorPickerThumb.Name = "ColorPickerThumb"
@@ -1056,7 +1072,7 @@ function EyeUI:CreateWindow(config)
             ColorPickerThumb.BackgroundColor3 = Color3.fromRGB(255,255,255)
             ColorPickerThumb.BorderSizePixel = 1
             ColorPickerThumb.BorderColor3 = Color3.fromRGB(0,0,0)
-            ColorPickerThumb.Size = UDim2.new(0, 10, 0, 10)
+            ColorPickerThumb.Size = UDim2.new(0, 12, 0, 12) -- Slightly larger thumb
             ColorPickerThumb.AnchorPoint = Vector2.new(0.5, 0.5)
             ColorPickerThumb.ZIndex = 2
 
@@ -1067,7 +1083,6 @@ function EyeUI:CreateWindow(config)
             local isDraggingColor = false
             local lastColor = config.Default
 
-            -- HSV to RGB conversion functions (simplified, for basic color wheel)
             local function HSVtoRGB(h, s, v)
                 local i = math.floor(h * 6)
                 local f = h * 6 - i
@@ -1088,7 +1103,7 @@ function EyeUI:CreateWindow(config)
                 elseif i == 5 then
                     return Color3.new(v, p, q)
                 end
-                return Color3.new(0,0,0) -- Should not happen
+                return Color3.new(0,0,0)
             end
 
             local function UpdateColor(inputPos)
@@ -1100,10 +1115,9 @@ function EyeUI:CreateWindow(config)
 
                 ColorPickerThumb.Position = UDim2.new(normX, 0, normY, 0)
 
-                -- Calculate color based on position (simplified HSV model)
                 local hue = normX
-                local saturation = 1 - normY -- Invert Y for saturation (top is full, bottom is desaturated)
-                local value = 1 -- Assuming full brightness for simplicity
+                local saturation = 1 - normY
+                local value = 1
 
                 local pickedColor = HSVtoRGB(hue, saturation, value)
                 CurrentColorPreview.BackgroundColor3 = pickedColor
@@ -1130,9 +1144,8 @@ function EyeUI:CreateWindow(config)
                 end
             end)
 
-            -- Set initial color preview and thumb position based on default
             local h, s, v = config.Default:ToHSV()
-            ColorPickerThumb.Position = UDim2.new(h, 0, 1 - s, 0) -- Position thumb based on initial HSV
+            ColorPickerThumb.Position = UDim2.new(h, 0, 1 - s, 0)
             CurrentColorPreview.BackgroundColor3 = config.Default
             config.Callback(config.Default)
 
@@ -1141,18 +1154,14 @@ function EyeUI:CreateWindow(config)
             return ColorPickerFrame
         end
 
-        -- Tab click event
         TabInteract.MouseButton1Click:Connect(function()
             Tab:Select()
         end)
 
-        -- Add to tabs list
         table.insert(self.Tabs, Tab)
 
-        -- Update scrolling frame
-        self.TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, self.TabsLayout.AbsoluteContentSize.Y)
+        self.TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, self.TabsLayout.AbsoluteContentSize.Y + self.TabsLayout.Padding.Offset * #self.Tabs)
 
-        -- Select first tab if this is the first one created
         if #self.Tabs == 1 then
             Tab:Select()
         end
@@ -1162,18 +1171,21 @@ function EyeUI:CreateWindow(config)
 
     function Window:Minimize()
         self.IsMinimized = true
-        self.Main.Visible = false
-        self.ShowPrompt.Visible = true
-
-        -- Animate prompt
-        local tween = TweenService:Create(self.ShowPrompt, TweenInfo.new(0.3, Enum.EasingStyle.Back), {Position = UDim2.new(0.5, -60, 0, 20)})
-        tween:Play()
+        local tweenOut = TweenService:Create(self.Main, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = self.Main.Position + UDim2.new(0,0,1,0)}) -- Slide down
+        tweenOut:Play()
+        tweenOut.Completed:Connect(function()
+            self.Main.Visible = false
+            self.ShowPrompt.Visible = true
+            TweenService:Create(self.ShowPrompt, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0.5, -75, 0, 20)}):Play()
+        end)
     end
 
     function Window:Restore()
         self.IsMinimized = false
-        self.Main.Visible = true
+        TweenService:Create(self.ShowPrompt, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = self.ShowPrompt.Position - UDim2.new(0,0,1,0)}):Play() -- Slide prompt out
         self.ShowPrompt.Visible = false
+        self.Main.Visible = true
+        TweenService:Create(self.Main, TweenInfo.new(0.3, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = config.Position}):Play() -- Slide main window back
     end
 
     function Window:Destroy()
@@ -1184,16 +1196,16 @@ function EyeUI:CreateWindow(config)
         config = config or {}
         config.Title = config.Title or "Notification"
         config.Description = config.Description or "No description provided"
-        config.Icon = config.Icon -- Can be explicitly set, otherwise defaults based on type
-        config.Duration = config.Duration or 5
+        config.Icon = config.Icon
+        config.Duration = config.Duration or 4 -- Slightly shorter default duration
         config.Type = config.Type or "info" -- "info", "success", "warning", "error"
 
-        spawn(function() -- Use spawn or coroutine for non-blocking delay
+        spawn(function()
             local Notification = Instance.new("Frame")
             Notification.Name = "Notification"
             Notification.Parent = self.NotificationsContainer
             Notification.BorderSizePixel = 0
-            Notification.Size = UDim2.new(1, 0, 0, 80)
+            Notification.Size = UDim2.new(1, 0, 0, 85) -- Slightly taller notifications
 
             local NotifCorner = Instance.new("UICorner")
             NotifCorner.CornerRadius = UDim.new(0, 12)
@@ -1203,25 +1215,24 @@ function EyeUI:CreateWindow(config)
             NotifIcon.Name = "NotifIcon"
             NotifIcon.Parent = Notification
             NotifIcon.BackgroundTransparency = 1
-            NotifIcon.Position = UDim2.new(0, 15, 0.5, -12)
+            NotifIcon.Position = UDim2.new(0, 18, 0.5, -12) -- Adjusted icon position
             NotifIcon.Size = UDim2.new(0, 24, 0, 24)
 
-            -- Set icon based on type if not explicitly provided
             if not config.Icon then
                 if config.Type == "success" then NotifIcon.Image = getLucideIcon("check-circle")
                 elseif config.Type == "warning" then NotifIcon.Image = getLucideIcon("alert-triangle")
                 elseif config.Type == "error" then NotifIcon.Image = getLucideIcon("x-circle")
                 else NotifIcon.Image = getLucideIcon("info") end
             else
-                NotifIcon.Image = getLucideIcon(config.Icon) -- Use provided icon if specified
+                NotifIcon.Image = getLucideIcon(config.Icon)
             end
 
             local NotifTitle = Instance.new("TextLabel")
             NotifTitle.Name = "NotifTitle"
             NotifTitle.Parent = Notification
             NotifTitle.BackgroundTransparency = 1
-            NotifTitle.Position = UDim2.new(0, 50, 0, 10)
-            NotifTitle.Size = UDim2.new(1, -60, 0, 20)
+            NotifTitle.Position = UDim2.new(0, 55, 0, 12) -- Adjusted text position
+            NotifTitle.Size = UDim2.new(1, -70, 0, 20)
             NotifTitle.Font = Enum.Font.GothamBold
             NotifTitle.Text = config.Title
             NotifTitle.TextSize = 16
@@ -1231,8 +1242,8 @@ function EyeUI:CreateWindow(config)
             NotifDesc.Name = "NotifDesc"
             NotifDesc.Parent = Notification
             NotifDesc.BackgroundTransparency = 1
-            NotifDesc.Position = UDim2.new(0, 50, 0, 30)
-            NotifDesc.Size = UDim2.new(1, -60, 0, 40)
+            NotifDesc.Position = UDim2.new(0, 55, 0, 35)
+            NotifDesc.Size = UDim2.new(1, -70, 0, 40)
             NotifDesc.Font = Enum.Font.Gotham
             NotifDesc.Text = config.Description
             NotifDesc.TextSize = 14
@@ -1240,17 +1251,14 @@ function EyeUI:CreateWindow(config)
             NotifDesc.TextXAlignment = Enum.TextXAlignment.Left
             NotifDesc.TextYAlignment = Enum.TextYAlignment.Top
 
-            -- Apply current theme colors to notification elements
             applyTheme(Notification, CurrentTheme)
 
-            -- Animate in
-            Notification.Position = UDim2.new(1, 0, 0, 0)
-            local tweenIn = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
+            Notification.Position = UDim2.new(1, 0, 0, 0) -- Start off-screen
+            local tweenIn = TweenService:Create(Notification, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.Out), {Position = UDim2.new(0, 0, 0, 0)})
             tweenIn:Play()
 
-            -- Auto dismiss
-            task.wait(config.Duration) -- Use task.wait for modern Roblox Lua
-            local tweenOut = TweenService:Create(Notification, TweenInfo.new(0.5, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = UDim2.new(1, 0, 0, 0)})
+            task.wait(config.Duration)
+            local tweenOut = TweenService:Create(Notification, TweenInfo.new(0.4, Enum.EasingStyle.Back, Enum.EasingDirection.In), {Position = UDim2.new(1, 0, 0, 0)})
             tweenOut:Play()
 
             tweenOut.Completed:Connect(function()
@@ -1266,10 +1274,8 @@ function EyeUI:CreateWindow(config)
             CurrentThemeName = themeName
             applyTheme(self.Main, CurrentTheme)
             applyTheme(self.ShowPrompt, CurrentTheme)
-            -- Re-apply theme to all existing tabs' static elements
             for _, tab in pairs(self.Tabs) do
                 applyTheme(tab.TabButton, CurrentTheme)
-                -- Also ensure the current tab's selector color is updated
                 if tab == self.CurrentTab then
                     tab.TabSelector.BackgroundColor3 = CurrentTheme.AccentColor
                 end
@@ -1279,7 +1285,6 @@ function EyeUI:CreateWindow(config)
         end
     end
 
-    -- Tab Search Logic
     TabSearchBox.Changed:Connect(function(property)
         if property == "Text" then
             local searchText = TabSearchBox.Text:lower()
@@ -1291,13 +1296,10 @@ function EyeUI:CreateWindow(config)
                     tab.TabButton.Visible = false
                 end
             end
-            -- Update CanvasSize after changing visibility
-            Window.TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, Window.TabsLayout.AbsoluteContentSize.Y)
+            Window.TabsScrolling.CanvasSize = UDim2.new(0, 0, 0, Window.TabsLayout.AbsoluteContentSize.Y + Window.TabsLayout.Padding.Offset * #Window.Tabs)
         end
     end)
 
-
-    -- Button Events
     Close.MouseButton1Click:Connect(function()
         Window:Destroy()
     end)
@@ -1310,13 +1312,10 @@ function EyeUI:CreateWindow(config)
         Window:Restore()
     end)
 
-    -- Apply initial theme
     applyTheme(Main, CurrentTheme)
     applyTheme(ShowPrompt, CurrentTheme)
 
-    -- Return window object
     return Window
 end
 
--- Return library
 return EyeUI
